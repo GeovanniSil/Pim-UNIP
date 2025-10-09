@@ -125,6 +125,8 @@ int main(){
     }
     
     fclose(pim01);
+
+    printf("testanto o o Git, sempre esqueço como usar esse trem :0");
     return 0;
 }
 
