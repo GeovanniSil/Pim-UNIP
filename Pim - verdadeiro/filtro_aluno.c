@@ -10,54 +10,37 @@ int main(){
         printf("erro");
     }
     
-    char frase[15];
+    char frase[70];
     char aluno[15];
-    printf("digite o aluno: ");
+    printf("digite o aluno:\n");
     scanf("%s", aluno);
 
     //char alunotxt1[15];
     //char alunotxt2[15];
     //char alunotxt3[15];
     //char alunotxt4[15];
-    //int encontrou = 0;
+    int encontrou = 0;
     //char alunotxt2[15];
     while (fgets(frase, sizeof(frase), pim01) != NULL)
     {
-
-        if (strcmp(frase, aluno) == 0)
-        {
-            printf("ta");
-            break;
-        }else 
-            printf("nao ta");
-            break;
-        
-        /* sscanf(frase, "%[^;];%[^;];%[^;];%[^;\n]", alunotxt1 ,alunotxt2, alunotxt3, alunotxt4);
-        if (strcmp(frase, alunotxt1) == 0)
-        {
-            printf("%s", frase);
-            break;
-        }else if (strcmp(frase, alunotxt2) == 0)
-        {
-            printf("%s", alunotxt2);
-            break;
-        }else if (strcmp(frase, alunotxt3) == 0)
-        {
-            printf("%s", alunotxt3);
-            break;
-        }else if (strcmp(frase, alunotxt4) == 0)
-        {
-            printf("%s", alunotxt4);
-            break;
-        }else 
-            printf("pq nao deu certo?");
-            break; */
-        
-        
-        
-
+        frase[strcspn(frase, "\n")] = '\0';
+        char *nome = strtok(frase, ";");
+        //função strtok, strtok serve para separar uma string em partes menores usando um caractere delimitador. No seu código, ele está separando cada campo da linha do arquivo para comparar o nome do aluno
+        while (nome != NULL) {
+            if (strcmp(nome, aluno) == 0) {
+                printf("Aluno encontrado: %s\n", nome);
+                encontrou = 1;
+                break;
+            }/* else
+                printf("nao encontrado");    
+                encontrou = 1;
+                break; */
+            nome = strtok(NULL, ";");
+            if(!encontrou);
+                printf("nao");
+                break;
     }
-    
-    
-
+    if (encontrou) break; // sai do loop principal
+}
+fclose(pim01);
 }
