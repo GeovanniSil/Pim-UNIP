@@ -81,7 +81,7 @@ int main(){
         //sscanf(linha, "%s %s %s %s %s", nome, t, g, f, materia);
         sscanf(linha, "%[^;];%f;%[^;];%f;%[^;]", nome, &t, g, &f, materia);
 
-        if ((strcmp(escolha, "1") == 0 && strcmp(materia, "matematica") == 0 || strcmp(escolha, "mate") == 0 && strcmp(materia, "matematica") == 0) )
+        if ((strcmp(escolha, "1") == 0 && strcmp(materia, "matematica") == 0 || strcmp(escolha, "mate") == 0 && strcmp(materia, "matematica") == 0))
         {
             float media = t + f;
             //dps apague essa variavel acima e o ultimo print da media, isso é apenas um teste sobre a media, preciso confimar se eu vou fazer o calculo da media ou o python     
