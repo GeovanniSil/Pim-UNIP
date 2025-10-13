@@ -1,18 +1,8 @@
-#include <stdio.h>
+/* #include <stdio.h>
 #include <string.h>
 
 int main() {
-    FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim01.txt", "r");//coloque o caminho onde esta salvo o seu arquivo txt e salve nele dados parecidos com esse abaixo
-        /* Geovanni;4.0;5.0;8;matematica
-        andrade;4.0;5.0;7.0;portugues
-        geovan;4.0;5.0;7.0;matematica
-        cuca;4.0;5.0;7.0;portugues
-        tu;4.0;5.0;7.0;portugues
-        tatu;4.0;5.0;7.0;matematica
-        acdc;7.0;54.0;7.0;quimica
-        guns'n rose;4.0;5.0;7.0;quimica
-        ttu;4.0;5.0;7.0;matematica
-        nickelback;4.0;5.0;7.0;quimica */
+    FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim01.txt", "r");
 
     if (pim01 == NULL) {
         printf("Erro ao abrir o arquivo.\n");
@@ -28,15 +18,13 @@ int main() {
     char materia[40];
     float n1, n2, n3;
     int encontrou = 0;
-    int novamente;
+
     switch (escolha) {
         case '1':
             printf("Buscar por aluno ainda não implementado.\n");
             break;
 
         case '2': { // case 2, serve para a gente escolher qual materia queremos olhar o relatorio, ainda nao esta completo, deixarei em loop para a gente olhar quantas vezes quisermos, porem, o caminho é esse
-            do
-            {
             char escolhaMateria[20];
             printf("Escolha a matéria (matematica, portugues, quimica): ");
             scanf("%s", escolhaMateria);
@@ -52,7 +40,7 @@ int main() {
                 printf("Matéria não encontrada. Tente novamente: ");
                 scanf("%s", escolhaMateria);
             }
-                       
+
             while (fgets(linha, sizeof(linha), pim01) != NULL) {
                 linha[strcspn(linha, "\n")] = '\0';
 
@@ -75,29 +63,116 @@ int main() {
                     printf("------------------\n");
                     encontrou = 1;
                 }
-
-                
-                
-               
             }
 
             if (!encontrou) {
                 printf("Nenhum aluno encontrado para a matéria '%s'.\n", escolhaMateria);
             }
-            printf("novamente? ");
-                scanf(" %i", &novamente);
+
             break;
         }
-    
-    } 
-        
-        
-        
-    
+
         default:
             printf("Opção inválida.\n");
             break;
-    }while (novamente == 1);
+    }
+
+    fclose(pim01);
+    return 0;
+}
+ */
+
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim01.txt", "r");
+
+    if (pim01 == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return 1;
+    }
+
+    char escolha;
+    printf("=====================================\n");
+    printf("        SISTEMA DE NOTAS - UNIP      \n");
+    printf("=====================================\n");
+    printf("Selecione uma opção:\n");
+    printf("  [1] Buscar por aluno\n");
+    printf("  [2] Buscar por matéria\n");
+    printf("Digite sua escolha: ");
+
+    scanf(" %c", &escolha);  
+
+
+    char linha[100];
+    char nome[40];
+    char materia[40];
+    float n1, n2, n3;
+    int encontrou = 0;
+    int novamente;
+    switch (escolha)
+    {
+    case '1':
+          
+         case '2':
+            do
+        {
+            fseek(pim01, 0, SEEK_SET);
+            char escolhaMateria[20];
+            printf("\nEscolha uma matéria:\n");
+            printf("  [1] Matemática\n");
+            printf("  [2] Português\n");
+            printf("  [3] Química\n");
+            printf("Digite o nome ou o número da matéria: ");
+
+            scanf("%s", escolhaMateria);
+                while (strcmp(escolhaMateria, "1") != 0
+                && strcmp(escolhaMateria, "matematica") != 0
+                && strcmp(escolhaMateria, "2") != 0
+                && strcmp(escolhaMateria, "portugues") != 0
+                && strcmp(escolhaMateria, "3") != 0
+                && strcmp(escolhaMateria, "quimica") != 0) {
+                printf("Matéria não encontrada. Tente novamente: ");
+                scanf("%s", escolhaMateria);
+            }
+
+            while (fgets(linha, sizeof(linha), pim01) != NULL)
+            {
+                linha[strcspn(linha, "\n")] = '\0';
+
+                sscanf(linha, "%[^;];%f;%f;%f;%[^;\n]", nome, &n1, &n2, &n3, materia);
+                if ((strcmp(escolhaMateria, materia) == 0)//aq fazemos a comparação entre oq a gente escreveu na hora de escolher a materia e oq esta dentro do nosso arquivo, se estiver a materia matematica dentro do arquivo, ent aparecerá o relatorio
+                || 
+                ((strcmp(escolhaMateria, "1") == 0) && (strcmp(materia, "matematica") == 0))
+                ||
+                ((strcmp(escolhaMateria, "2") == 0) && (strcmp(materia, "portugues") == 0))
+                ||
+                ((strcmp(escolhaMateria, "3") == 0) && (strcmp(materia, "quimica") == 0))
+                )
+                {
+                    printf("\n------------------\n");
+                    printf("Nome: %s\n", nome);
+                    printf("Matéria: %s\n", materia);
+                    printf("Notas: %.1f, %.1f, %.1f\n", n1, n2, n3);
+                    printf("Média: %.1f\n", (n1 + n2 + n3) / 3);
+                    printf("------------------\n");
+                    encontrou = 1;
+                    
+                }
+                
+            }
+            if (!encontrou) {
+            printf("Nenhum aluno encontrado para a matéria '%s'.\n", escolhaMateria);
+            }
+            
+            printf("novamente");
+                scanf("%i", &novamente);
+        } while (novamente == 1);
+        
+         break; 
+
+    }
 
     fclose(pim01);
     return 0;
