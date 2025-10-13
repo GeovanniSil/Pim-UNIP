@@ -36,7 +36,17 @@ int main(){
 
 int main(){
     FILE * pim01;
-    pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim01.txt", "r");//colocar o caminho que esta salvo o seu txt
+    pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim01.txt", "r");//coloque o caminho onde esta salvo o seu arquivo txt e salve nele dados parecidos com esse abaixo
+        /* Geovanni;4.0;5.0;8;matematica
+        andrade;4.0;5.0;7.0;portugues
+        geovan;4.0;5.0;7.0;matematica
+        cuca;4.0;5.0;7.0;portugues
+        tu;4.0;5.0;7.0;portugues
+        tatu;4.0;5.0;7.0;matematica
+        acdc;7.0;54.0;7.0;quimica
+        guns'n rose;4.0;5.0;7.0;quimica
+        ttu;4.0;5.0;7.0;matematica
+        nickelback;4.0;5.0;7.0;quimica */
 
     if (pim01 == NULL)
     {

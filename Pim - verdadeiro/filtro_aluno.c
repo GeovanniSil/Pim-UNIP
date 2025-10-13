@@ -3,8 +3,10 @@
 
 int main(){
     FILE * pim01;
-    pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\filtroAluno.txt", "r");//colocar o caminho que esta salvo o seu txt
-
+    pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\filtroAluno.txt", "r");//coloque o caminho onde esta salvo o seu arquivo txt e salve nele dados parecidos com esse abaixo
+    /* theo;4.4;geovanni;mae;carlos;
+    tatu;4.0;5.0;7.0;matematica */
+    //ainda vou comentar esse codigo
     if (pim01 == NULL)
     {
         printf("erro");

@@ -2,7 +2,17 @@
 #include <string.h>
 
 int main() {
-    FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim01.txt", "r");
+    FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim01.txt", "r");//coloque o caminho onde esta salvo o seu arquivo txt e salve nele dados parecidos com esse abaixo
+        /* Geovanni;4.0;5.0;8;matematica
+        andrade;4.0;5.0;7.0;portugues
+        geovan;4.0;5.0;7.0;matematica
+        cuca;4.0;5.0;7.0;portugues
+        tu;4.0;5.0;7.0;portugues
+        tatu;4.0;5.0;7.0;matematica
+        acdc;7.0;54.0;7.0;quimica
+        guns'n rose;4.0;5.0;7.0;quimica
+        ttu;4.0;5.0;7.0;matematica
+        nickelback;4.0;5.0;7.0;quimica */
 
     if (pim01 == NULL) {
         printf("Erro ao abrir o arquivo.\n");
@@ -18,13 +28,15 @@ int main() {
     char materia[40];
     float n1, n2, n3;
     int encontrou = 0;
-
+    int novamente;
     switch (escolha) {
         case '1':
             printf("Buscar por aluno ainda não implementado.\n");
             break;
 
         case '2': { // case 2, serve para a gente escolher qual materia queremos olhar o relatorio, ainda nao esta completo, deixarei em loop para a gente olhar quantas vezes quisermos, porem, o caminho é esse
+            do
+            {
             char escolhaMateria[20];
             printf("Escolha a matéria (matematica, portugues, quimica): ");
             scanf("%s", escolhaMateria);
@@ -40,7 +52,7 @@ int main() {
                 printf("Matéria não encontrada. Tente novamente: ");
                 scanf("%s", escolhaMateria);
             }
-
+                       
             while (fgets(linha, sizeof(linha), pim01) != NULL) {
                 linha[strcspn(linha, "\n")] = '\0';
 
@@ -63,19 +75,29 @@ int main() {
                     printf("------------------\n");
                     encontrou = 1;
                 }
+
+                
+                
+               
             }
 
             if (!encontrou) {
                 printf("Nenhum aluno encontrado para a matéria '%s'.\n", escolhaMateria);
             }
-
+            printf("novamente? ");
+                scanf(" %i", &novamente);
             break;
         }
-
+    
+    } 
+        
+        
+        
+    
         default:
             printf("Opção inválida.\n");
             break;
-    }
+    }while (novamente == 1);
 
     fclose(pim01);
     return 0;
