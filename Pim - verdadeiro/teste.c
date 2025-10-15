@@ -81,16 +81,24 @@ int main(){
     float t;
     char g[10];
     float f;
+    int nota;
     char materia[100];
+    char turma[20];
+    char teste[40];
     int encontrou = 0; // serve para verificar se a materia que a gente escolher existe dentro do arquivo txt, ex o usuário escolheu “química” ✅, mas o arquivo não tem nenhuma linha com “química”, então o programa deve mostrar algum alerta
+    //fgets(linha, sizeof(linha), pim01);
 
+    char pulaCabecalho[200];
+    fgets(pulaCabecalho, sizeof(pulaCabecalho), pim01);//essa função pula o cabeçalho do meu arquivo txt, ex, na primiera linha terá id;nome e a nas linhas de baixo terá, 1;geovanni;unip, essa função vai pular o id;nome e seguir apenas com as linhas de baixo
+    //a função fgets le apenas a primeira linha de um arquivo
+    
     while (fgets(linha, sizeof(linha), pim01) != NULL)
     {
       //  printf("%s", nome);
         linha[strcspn(linha, "\n")] = '\0';//serve para limpar o enter que fica, as vezes nao entrara na condição ali de baixo pelo fato de o arquivo estar indo com o \n, e a condição é "geovannisilva" porem, o fgets esta lendo "geovannisilva\n", a função serve para tirar esse \n do texto
         //sscanf(linha, "%s %s %s %s %s", nome, t, g, f, materia);
-        sscanf(linha, "%[^;];%f;%[^;];%f;%[^;]", nome, &t, g, &f, materia);
-
+        sscanf(linha, "%[^;];%[^;];%[^;];%[^;];%f;%f,%f,%f", nome, turma, teste, materia, &t, &f, &t, &nota);
+        
         if ((strcmp(escolha, "1") == 0 && strcmp(materia, "matematica") == 0 || strcmp(escolha, "mate") == 0 && strcmp(materia, "matematica") == 0))
         {
             float media = t + f;

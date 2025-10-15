@@ -15,9 +15,9 @@ int main() {
         printf("=====================================\n");
         printf("        RELATORIO DE NOTAS - UNIP      \n");
         printf("=====================================\n");
-        printf("Selecione uma opção:\n");
+        printf("Selecione uma opcao:\n");
         printf("  [1] Buscar por aluno\n");
-        printf("  [2] Buscar por matéria\n");
+        printf("  [2] Buscar por materia\n");
         printf("  [0] Sair\n");
         printf("Digite sua escolha: ");
 
@@ -29,11 +29,14 @@ int main() {
         float n1, n2, n3;
         int encontrou = 0;
         int novamente;
-
+        char pulaCabecalho[200];
+        char turma[20];
+        char teste[40];
+        float t, f, nota;
         switch (escolha) {
             case '1':
                 
-                printf("Busca por aluno ainda não implementada.\n");
+                printf("Busca por aluno ainda nao implementada.\n");
                 break;
 
             case '2':// case 2, serve para a gente escolher qual materia queremos olhar o relatorio, ainda nao esta completo, deixarei em loop para a gente olhar quantas vezes quisermos, porem, o caminho é esse
@@ -42,10 +45,10 @@ int main() {
                     encontrou = 0;
                     char escolhaMateria[20];
                     printf("\nEscolha uma matéria:\n");
-                    printf("  [1] Matemática\n");
-                    printf("  [2] Português\n");
+                    printf("  [1] Matematica\n");
+                    printf("  [2] Portugues\n");
                     printf("  [3] Química\n");
-                    printf("Digite o nome ou o número da matéria: ");
+                    printf("Digite o nome ou o numero da materia: ");
 
                     scanf("%s", escolhaMateria);
 
@@ -55,16 +58,17 @@ int main() {
                         && strcmp(escolhaMateria, "portugues") != 0
                         && strcmp(escolhaMateria, "3") != 0
                         && strcmp(escolhaMateria, "quimica") != 0) {
-                        printf("Matéria não encontrada. Tente novamente: ");
+                        printf("Materia não encontrada. Tente novamente: ");
                         scanf("%s", escolhaMateria);
                         // validação sobre qual materia a gente quer olhar, "strcmp" é uma função que compara strings, que bem util para a gente fazer a comparação entre as materias que esta no nosso arquivo txt. Ex, se eu escolher a opção 1, será feita a verificação ali embaixo, se a variavel "escolhaMateria" for igual a 1 e a variavel "materia" for igual a "matematica", o sistema exibira o relatorio sobre a meteria escolhida. Esse comportamento serve para os outros numeros.
                         //caso a gente escolha uma materia que nao esteja dentro da condição, o sistema entrará no loop, vou acrescentar uma forma de sair do programa dentro desse loop aq, caso o usuario nao queira mais olhar as notas
                     }
-
+                    
+                    fgets(pulaCabecalho, sizeof(pulaCabecalho), pim01);
                     while (fgets(linha, sizeof(linha), pim01) != NULL) {
                         linha[strcspn(linha, "\n")] = '\0';
 
-                        sscanf(linha, "%[^;];%f;%f;%f;%[^;\n]", nome, &n1, &n2, &n3, materia);//essa função faz a separação dos dados e guardamos em uma variavel, a separação é feita pelo o ";". Funciona assim, leita ate encontrar um ";" e salve em uma variavel, ex, Geovanni;19,anos, Geovanni = char nome[10], 19 = int idade;. anos = char anosIdade[10];. A cada ";" é guardado uma variavel
+                        sscanf(linha, "%[^;];%[^;];%[^;];%[^;];%f;%f,%f,%f", nome, turma, teste, materia, &t, &f, &t, &nota);//essa função faz a separação dos dados e guardamos em uma variavel, a separação é feita pelo o ";". Funciona assim, leita ate encontrar um ";" e salve em uma variavel, ex, Geovanni;19,anos, Geovanni = char nome[10], 19 = int idade;. anos = char anosIdade[10];. A cada ";" é guardado uma variavel
 
                         if ((strcmp(escolhaMateria, materia) == 0)
                         //aq fazemos a comparação entre oq a gente escreveu na hora de escolher a materia e oq esta dentro do nosso arquivo, se estiver a materia matematica dentro do arquivo, ent aparecerá o relatorio
@@ -75,31 +79,32 @@ int main() {
                         ) {
                             printf("\n------------------\n");
                             printf("Nome: %s\n", nome);
-                            printf("Matéria: %s\n", materia);
+                            printf("Materia: %s\n", materia);
                             printf("Notas: %.1f, %.1f, %.1f\n", n1, n2, n3);
-                            printf("Média: %.1f\n", (n1 + n2 + n3) / 3);
+                            printf("Media: %.1f\n", (n1 + n2 + n3) / 3);
                             printf("------------------\n");
                             encontrou = 1;
                         }
                     }
 
-                    if (!encontrou) {
-                        printf("Nenhum aluno encontrado para a matéria '%s'.\n", escolhaMateria);
+                    if (encontrou == 0) {
+                        printf("Nenhum aluno encontrado para a materia '%s'.\n", escolhaMateria);
                     }
 
-                    printf("Deseja buscar outra matéria? Digite 1 para SIM ou 0 para NÃO: ");
+                    printf("Deseja buscar outra materia? Digite 1 para SIM ou 0 para NAO: ");
                     scanf("%d", &novamente);
 
                 } while (novamente == 1);
                 break;
 
             case '0':
-                dnv = 0;
+                dnv = 0;//se no menu eu escolher 0, a sistema sair do programa pq a variavel "dnv" estara com o valor de 0, logo ela na cai na condição do primeiro do while, como visto ali em baixo
+                //caso queira testar, mude essa variavel "dnv = 0" para "dnv = 1" o loop vai continuar pq a condição ali de baixo retornou true, logo, o loop se repete
                 printf("Saindo do sistema...\n");
                 break;
 
             default:
-                printf("Opção inválida. Tente novamente.\n");
+                printf("Opcao invalida. Tente novamente.\n");
         }
 
     } while (dnv == 1);
