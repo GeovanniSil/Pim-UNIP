@@ -4,7 +4,7 @@
 int main() {
     FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim01.txt", "r");
     FILE *pim02 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim02.txt", "r");
-    FILE *pim03 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim03.txt", "r");
+    FILE *pim03 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\ESTUDOS\\faculdade\\PROGRAMACAO ESTRUTURADA EM C\\Algoritmos_e_Estruturas_de_Dados.csv", "r");
 
     if (pim01 == NULL) {
         printf("Erro ao abrir o arquivo.\n");
@@ -35,7 +35,7 @@ int main() {
         char linha03[100];//variavel onde esta sendo salvo os dados do arquivo "pim03"
         char nome[40];
         char materia[40];
-        float n1 = 0, n2 = 0, n3 = 0;
+        float n1 = 0, n2 = 0, n3;
         int encontrou = 0;
         int novamente;
         char pulaCabecalho[200];
@@ -73,9 +73,10 @@ int main() {
                 do {
                     fseek(pim01, 0, SEEK_SET);
                     fseek(pim02, 0, SEEK_SET);
+                    fseek(pim03, 0, SEEK_SET);
                     encontrou = 0;
                     
-                    printf("\nEscolha uma matéria:\n");
+                    printf("\nEscolha uma materia:\n");
                     printf("  [1] Matematica\n");
                     printf("  [2] Portugues\n");
                     printf("  [3] Química\n");
@@ -109,42 +110,48 @@ int main() {
                         }
                         
 
-                    }else if ((strcmp(escolhaMateria, "2") == 0) || (strcmp(escolhaMateria, "matematica") == 0))
+                    }else if ((strcmp(escolhaMateria, "2") == 0) || (strcmp(escolhaMateria, "portugues") == 0))
                     {
-                        printf("at\n");
+                        printf("\nRelatorio de portugues:\n");
                         encontrou = 1;
-
-                        fgets(linha02, sizeof(linha02), pim02);
+                        
+                        fgets(linha02, sizeof(linha02), pim02);//pular o cabeçalho
                         while (fgets(linha02, sizeof(linha02), pim02) != NULL)
                         {
-                           
                             linha02[strcspn(linha02, "\n")] = '\0';
+                           
 
-                            sscanf(linha, "%[^;];%[^;];%[^;];%[^;];%f;%f,%f,%f", nome, turma, teste, materia, &t, &f, &t, &nota);
+                            sscanf(linha02, "%[^;];%[^;];%[^;];%f;%f,%f,%f", nome, turma, teste, materia, &n1, &n2, &n3, &nota);                             
                             printf("\n------------------\n");
                             printf("Nome: %s\n", nome);
                             printf("Materia: %s\n", materia);
-                            printf("Notas: %.1f, %.1f, %.1f\n", n1, n2, n3);
+                            printf("Notas: %.1f %.1f %.1f\n", n1, n2, n3);
                             printf("Media: %.1f\n", (n1 + n2 + n3) / 3);
                             printf("------------------\n");
                             encontrou = 1;
-
                         }
                         
                     }else if (strcmp(escolhaMateria, "3") == 0)
                     {
                         printf("ataaaaa\n");
                         encontrou = 1;
-
+                        fgets(linha03, sizeof(linha03), pim03);
                         while (fgets(linha03, sizeof(linha03), pim03) != NULL)
                         {
-                            printf("%s", linha03);
+                            linha03[strcspn(linha03, "\n")] = '\0';
+                           
+
+                            sscanf(linha03, "%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, materia, &n1, &n2, &n3, &nota);
+                                                        
+                            printf("\n------------------\n");
+                            printf("Nome: %s\n", nome);
+                            printf("Materia: %s\n", materia);
+                            printf("Notas: %.1f %.1f %.1f\n", n1, n2, n3);
+                            printf("Media: %.1f\n", (n1 + n2 + n3) / 3);
+                            printf("------------------\n");
+                            encontrou = 1;
                         }
                     }
-                    
-                        printf("ata\n");
-                        encontrou = 1;
-                    
                     
 
                     if (encontrou == 0) {
