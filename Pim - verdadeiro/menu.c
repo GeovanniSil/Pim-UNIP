@@ -5,7 +5,6 @@ int main() {
     FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim01.txt", "r");
     FILE *pim02 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim02.txt", "r");
     FILE *pim03 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\ESTUDOS\\faculdade\\PROGRAMACAO ESTRUTURADA EM C\\Algoritmos_e_Estruturas_de_Dados.csv", "r");
-
     if (pim01 == NULL) {
         printf("Erro ao abrir o arquivo.\n");
         return 1;
