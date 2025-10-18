@@ -2,9 +2,10 @@
 #include <string.h>
 
 int main() {
-    FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim01.txt", "r");
+    FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Algoritmos_e_Estruturas_de_Dados_em_Python.csv", "r");
     FILE *pim02 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim02.txt", "r");
-    FILE *pim03 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\ESTUDOS\\faculdade\\PROGRAMACAO ESTRUTURADA EM C\\Algoritmos_e_Estruturas_de_Dados.csv", "r");
+    FILE *pim03 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Algoritmos_e_Estruturas_de_Dados_em_Python.csv", "r");
+
     if (pim01 == NULL) {
         printf("Erro ao abrir o arquivo.\n");
         return 1;
@@ -76,7 +77,7 @@ int main() {
                     encontrou = 0;
                     
                     printf("\nEscolha uma materia:\n");
-                    printf("  [1] Matematica\n");
+                    printf("  [1] Algoritmos_e_Estruturas_de_Dados_em_Python\n");
                     printf("  [2] Portugues\n");
                     printf("  [3] Química\n");
                     printf("Digite o nome ou o numero da materia: ");
@@ -95,18 +96,27 @@ int main() {
                         //caso a gente escolha uma materia que nao esteja dentro da condição, o sistema entrará no loop, vou acrescentar uma forma de sair do programa dentro desse loop aq, caso o usuario nao queira mais olhar as notas
                     }
                     
-                    fgets(pulaCabecalho, sizeof(pulaCabecalho), pim01);//essa função pula o cabeçalho do meu arquivo txt, ex, na primiera linha terá id;nome e a nas linhas de baixo terá, 1;geovanni;unip, essa função vai pular o id;nome e seguir apenas com as linhas de baixo
+                    //essa função pula o cabeçalho do meu arquivo txt, ex, na primiera linha terá id;nome e a nas linhas de baixo terá, 1;geovanni;unip, essa função vai pular o id;nome e seguir apenas com as linhas de baixo
                     //a função fgets le apenas a primeira linha de um arquivo
                     
-                    if (strcmp(escolhaMateria, "1") == 0)
+                    if ((strcmp(escolhaMateria, "1") == 0) || (strcmp(escolhaMateria, "Algoritmos_e_Estruturas_de_Dados_em_Python") == 0))
                     {
-                        printf("ta\n");
-                        encontrou = 1;
-
+                        fgets(linha, sizeof(linha), pim01);//essa função pula o cabeçalho do meu arquivo txt, ex, na primiera linha terá id;nome e a nas linhas de baixo terá, 1;geovanni;unip, essa função vai pular o id;nome e seguir apenas com as linhas de baixo
+                        //a função fgets le apenas a primeira linha de um arquivo
                         while (fgets(linha, sizeof(linha), pim01) != NULL)
                         {
-                            printf("%s", linha);
+                            linha[strcspn(linha, "\n")] = '\0';
+                            sscanf(linha, "%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, materia, &n1, &n2, &n3, &nota);      
+                            printf("\n------------------\n");
+                            printf("Nome: %s\n", nome);
+                            printf("Materia: %s\n", materia);
+                            printf("Notas: %.1f %.1f %.1f\n", n1, n2, n3);
+                            printf("Media: %.1f\n", (n1 + n2 + n3) / 3);
+                            printf("------------------\n");
+                            encontrou = 1;
+
                         }
+                        
                         
 
                     }else if ((strcmp(escolhaMateria, "2") == 0) || (strcmp(escolhaMateria, "portugues") == 0))
@@ -117,10 +127,10 @@ int main() {
                         fgets(linha02, sizeof(linha02), pim02);//pular o cabeçalho
                         while (fgets(linha02, sizeof(linha02), pim02) != NULL)
                         {
-                            linha02[strcspn(linha02, "\n")] = '\0';
+                            linha02[strcspn(linha02, "\n")] = '\0';//serve para limpar o enter que fica, as vezes nao entrara na condição ali de baixo pelo fato de o arquivo estar indo com o \n, e a condição é "geovannisilva" porem, o fgets esta lendo "geovannisilva\n", a função serve para tirar esse \n do texto
                            
 
-                            sscanf(linha02, "%[^;];%[^;];%[^;];%f;%f,%f,%f", nome, turma, teste, materia, &n1, &n2, &n3, &nota);                             
+                            sscanf(linha02, "%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, materia, &n1, &n2, &n3, &nota);      
                             printf("\n------------------\n");
                             printf("Nome: %s\n", nome);
                             printf("Materia: %s\n", materia);
@@ -132,16 +142,11 @@ int main() {
                         
                     }else if (strcmp(escolhaMateria, "3") == 0)
                     {
-                        printf("ataaaaa\n");
-                        encontrou = 1;
                         fgets(linha03, sizeof(linha03), pim03);
                         while (fgets(linha03, sizeof(linha03), pim03) != NULL)
                         {
-                            linha03[strcspn(linha03, "\n")] = '\0';
-                           
-
+                            linha03[strcspn(linha03, "\n")] = '\0';//serve para limpar o enter que fica, as vezes nao entrara na condição ali de baixo pelo fato de o arquivo estar indo com o \n, e a condição é "geovannisilva" porem, o fgets esta lendo "geovannisilva\n", a função serve para tirar esse \n do texto
                             sscanf(linha03, "%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, materia, &n1, &n2, &n3, &nota);
-                                                        
                             printf("\n------------------\n");
                             printf("Nome: %s\n", nome);
                             printf("Materia: %s\n", materia);
@@ -158,7 +163,21 @@ int main() {
                     }
 
                     printf("Deseja buscar outra materia? Digite 1 para SIM ou 0 para NAO: ");
-                    scanf("%d", &novamente);
+                    scanf("%i", &novamente);
+                    
+                    if (novamente == 0)
+                        break;
+
+                    while (novamente != 1)
+                    {
+                        printf("Escolha errada, digite novamente: ");//força o usuario digitar 1 ou 0, para continuar ou sair do menu de relatorio
+                        scanf("%i", &novamente);
+                        while (getchar() != '\n'); // essa função faz a limpeza do buffer, caso o usuario digitar uma letra nessa validação o programa vai entrar em um loop eterno, pq o programa esta esperando um int e nao um char, ai essa variavel fazer a limpeza para nao ocorrer o loop
+                        continue;
+                    }
+                    
+                    
+                    
 
                 } while (novamente == 1);
                 break;
@@ -173,9 +192,11 @@ int main() {
                 printf("Opcao invalida. Tente novamente.\n");
         }
 
-    } while (dnv == 1);
+    } while (dnv == 1);// caso a gente escolher olhar novamente os relatorio, a variavel pássara a ser 1 e vai satisfazer a condição, fazendo com que o loop se repita e mostre novamente o menu de relatorio
 
     fclose(pim01);
+    fclose(pim02);
+    fclose(pim03);
     return 0;
 }
 /* 
