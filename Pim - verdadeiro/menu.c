@@ -3,9 +3,8 @@
 
 int main() {
     FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Algoritmos_e_Estruturas_de_Dados_em_Python.csv", "r");
-    FILE *pim02 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim02.txt", "r");
+    FILE *pim02 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Analise_e_Projeto_de_Sistemas.csv", "r");
     FILE *pim03 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Algoritmos_e_Estruturas_de_Dados_em_Python.csv", "r");
-
     if (pim01 == NULL) {
         printf("Erro ao abrir o arquivo.\n");
         return 1;
@@ -44,6 +43,7 @@ int main() {
         float t, f, nota;
         char escolhaMateria[20];
         int testeSub;
+        char raAluno[10];
         switch (escolha) {
             case '1':
                 
@@ -75,10 +75,10 @@ int main() {
                     fseek(pim02, 0, SEEK_SET);
                     fseek(pim03, 0, SEEK_SET);
                     encontrou = 0;
-                    
+                    int contadorAlunos = 0;
                     printf("\nEscolha uma materia:\n");
                     printf("  [1] Algoritmos_e_Estruturas_de_Dados_em_Python\n");
-                    printf("  [2] Portugues\n");
+                    printf("  [2] Analise_e_Projeto_de_Sistemas\n");
                     printf("  [3] Química\n");
                     printf("Digite o nome ou o numero da materia: ");
 
@@ -106,7 +106,7 @@ int main() {
                         while (fgets(linha, sizeof(linha), pim01) != NULL)
                         {
                             linha[strcspn(linha, "\n")] = '\0';
-                            sscanf(linha, "%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, materia, &n1, &n2, &n3, &nota);      
+                            sscanf(linha, "%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);      
                             printf("\n------------------\n");
                             printf("Nome: %s\n", nome);
                             printf("Materia: %s\n", materia);
@@ -114,11 +114,10 @@ int main() {
                             printf("Media: %.1f\n", (n1 + n2 + n3) / 3);
                             printf("------------------\n");
                             encontrou = 1;
-
+                            contadorAlunos ++;
                         }
+                        printf("\nTotal de numero de alunos encontrados para essa materia: %i\n", contadorAlunos);
                         
-                        
-
                     }else if ((strcmp(escolhaMateria, "2") == 0) || (strcmp(escolhaMateria, "portugues") == 0))
                     {
                         printf("\nRelatorio de portugues:\n");
@@ -130,36 +129,40 @@ int main() {
                             linha02[strcspn(linha02, "\n")] = '\0';//serve para limpar o enter que fica, as vezes nao entrara na condição ali de baixo pelo fato de o arquivo estar indo com o \n, e a condição é "geovannisilva" porem, o fgets esta lendo "geovannisilva\n", a função serve para tirar esse \n do texto
                            
 
-                            sscanf(linha02, "%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, materia, &n1, &n2, &n3, &nota);      
+                            sscanf(linha02, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);      
                             printf("\n------------------\n");
                             printf("Nome: %s\n", nome);
                             printf("Materia: %s\n", materia);
                             printf("Notas: %.1f %.1f %.1f\n", n1, n2, n3);
-                            printf("Media: %.1f\n", (n1 + n2 + n3) / 3);
+                            printf("Media: %.1f\n", nota);
                             printf("------------------\n");
                             encontrou = 1;
+                            contadorAlunos ++;
                         }
-                        
+                        printf("\nTotal de numero de alunos encontrados para essa materia: %i\n", contadorAlunos);
+
                     }else if (strcmp(escolhaMateria, "3") == 0)
                     {
                         fgets(linha03, sizeof(linha03), pim03);
+                        //int contadorAlunos = 0;//se eu cololocar essa variavel dentro do loop while, ela sempre vai voltar a ser 0 e nao fará a logica que eu quero, que no caso seria a cada aluno achado, incrementar 1 a variavel contador, isso é para a gente saber quantos alunos tem em cada relatorio. Vou inicializar essa variavel
                         while (fgets(linha03, sizeof(linha03), pim03) != NULL)
-                        {
+                        {    
                             linha03[strcspn(linha03, "\n")] = '\0';//serve para limpar o enter que fica, as vezes nao entrara na condição ali de baixo pelo fato de o arquivo estar indo com o \n, e a condição é "geovannisilva" porem, o fgets esta lendo "geovannisilva\n", a função serve para tirar esse \n do texto
-                            sscanf(linha03, "%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, materia, &n1, &n2, &n3, &nota);
+                            sscanf(linha03, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);
                             printf("\n------------------\n");
                             printf("Nome: %s\n", nome);
                             printf("Materia: %s\n", materia);
                             printf("Notas: %.1f %.1f %.1f\n", n1, n2, n3);
-                            printf("Media: %.1f\n", (n1 + n2 + n3) / 3);
+                            printf("Media: %.1f\n", nota);
                             printf("------------------\n");
                             encontrou = 1;
+                            contadorAlunos ++;
                         }
+                        printf("\nTotal de numero de alunos encontrados para essa materia: %i\n", contadorAlunos);
                     }
                     
-
                     if (encontrou == 0) {
-                        printf("Nenhum aluno encontrado para a materia '%s'.\n", escolhaMateria);
+                        printf("Nenhum aluno encontrado para esta materia .\n");
                     }
 
                     printf("Deseja buscar outra materia? Digite 1 para SIM ou 0 para NAO: ");
@@ -198,6 +201,7 @@ int main() {
     fclose(pim02);
     fclose(pim03);
     return 0;
+    system("pause");
 }
 /* 
                     while (fgets(linha, sizeof(linha), pim01) != NULL) {
