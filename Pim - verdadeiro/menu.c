@@ -4,7 +4,7 @@
 int main() {
     FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Algoritmos_e_Estruturas_de_Dados_em_Python.csv", "r");
     FILE *pim02 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Analise_e_Projeto_de_Sistemas.csv", "r");
-    FILE *pim03 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Algoritmos_e_Estruturas_de_Dados_em_Python.csv", "r");
+    FILE *pim03 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Engenharia_de_Software_Agil.csv", "r");
     if (pim01 == NULL) {
         printf("Erro ao abrir o arquivo.\n");
         return 1;
@@ -17,7 +17,7 @@ int main() {
 
     int dnv = 1;
     do {
-        char escolha;
+        int escolha;
         printf("=====================================\n");
         printf("        RELATORIO DE NOTAS - UNIP      \n");
         printf("=====================================\n");
@@ -27,7 +27,7 @@ int main() {
         printf("  [0] Sair\n");
         printf("Digite sua escolha: ");
 
-        scanf(" %c", &escolha);
+        scanf(" %i", &escolha);
 
         char linha[100];//variavel onde esta sendo salvo os dados do arquivo "pim01"
         char linha02[100];//variavel onde esta sendo salvo os dados do arquivo "pim02"
@@ -37,39 +37,48 @@ int main() {
         float n1 = 0, n2 = 0, n3;
         int encontrou = 0;
         int novamente;
-        char pulaCabecalho[200];
         char turma[20];
-        char teste[40];
+        char nomeAluno[20];
         float t, f, nota;
-        char escolhaMateria[20];
+        char escolhaMateria[20];//
+        char escolhaMateriaAluno[20];//
+        //int escolhaMateriaAluno;
         int testeSub;
         char raAluno[10];
         switch (escolha) {
-            case '1':
-                
-                printf("Busca por aluno ainda nao implementada.\n");
+            case 1:
+                            
+                printf("Busca por aluno.\n");
 
-                printf("teste de sub menu ");
-                scanf("%i", &testeSub);
-
-                switch (testeSub)
-                {
-                case 1:
-                    while (fgets(linha02, sizeof(linha02), pim02) != NULL)
+                printf("Escolha uma materia:\n");
+                printf("[1] Algoritmos_e_Estruturas_de_Dados_em_Python\n");
+                scanf("%s", escolhaMateriaAluno);
+                    
+                    if (strcmp(escolhaMateriaAluno, "1") == 0)
                     {
-                        printf("%s\n", linha02);
+                        printf("nome do aluno? ");
+                        scanf("%s", nomeAluno);
+                        fgets(linha, sizeof(linha), pim01);
+                        while (fgets(linha, sizeof(linha), pim01) != NULL)
+                        {
+                            sscanf(linha, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);
+                            if (strcmp(nomeAluno, nome) == 0)
+                            {
+                                printf("deu certo\n");  
+                                encontrou = 1;// A variável "encontrou" funciona como uma flag, assim que eu encontro oq eu quero, ela muda para 1 e nao vai para a condição ali de baixo fora do while que esta lendoo arquivo. 
+                                            // Ela começa com valor 0 e muda para 1 quando o aluno é encontrado, isso significa que deu certo na nossa procura. Caso nao achar nada, a variavel vai continuar 0 (pq eu a iniciei como zero no começo do codigo) e vai entrar na condição ali de baixo 
+                                            // eu nao coloco esse if de baixo pq ele vai printar toda hora que o while passar por uma linha e a condição do if de cima nao for satisfeita, vai printar "aluno nao encontrado" todas as vezes que ele passar por uma linha e nao encontrar o aluno que eu quero saber
+                                break;
+                            }    
+                        }
+                        if (encontrou == 0)
+                        {
+                            printf("aluno nao encontrado");
+                        }
                     }
-                        
-
-
-                    break;
-                
-                default:
-                    break;
-                }
-                break;
-
-            case '2':// case 2, serve para a gente escolher qual materia queremos olhar o relatorio, ainda nao esta completo, deixarei em loop para a gente olhar quantas vezes quisermos, porem, o caminho é esse
+                   
+                    break;                                
+            case 2:// case 2, serve para a gente escolher qual materia queremos olhar o relatorio, ainda nao esta completo, deixarei em loop para a gente olhar quantas vezes quisermos, porem, o caminho é esse
                 do {
                     fseek(pim01, 0, SEEK_SET);
                     fseek(pim02, 0, SEEK_SET);
@@ -101,12 +110,15 @@ int main() {
                     
                     if ((strcmp(escolhaMateria, "1") == 0) || (strcmp(escolhaMateria, "Algoritmos_e_Estruturas_de_Dados_em_Python") == 0))
                     {
+                        printf("\nRelatorio de Algoritmos_e_Estruturas_de_Dados_em_Python:\n");
                         fgets(linha, sizeof(linha), pim01);//essa função pula o cabeçalho do meu arquivo txt, ex, na primiera linha terá id;nome e a nas linhas de baixo terá, 1;geovanni;unip, essa função vai pular o id;nome e seguir apenas com as linhas de baixo
                         //a função fgets le apenas a primeira linha de um arquivo
                         while (fgets(linha, sizeof(linha), pim01) != NULL)
                         {
-                            linha[strcspn(linha, "\n")] = '\0';
-                            sscanf(linha, "%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);      
+                            linha[strcspn(linha, "\n")] = '\0';//serve para limpar o enter que fica, as vezes nao entrara na condição ali de baixo pelo fato de o arquivo estar indo com o \n, e a condição é "geovannisilva" porem, o fgets esta lendo "geovannisilva\n", a função serve para tirar esse \n do texto
+
+                            sscanf(linha, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);
+                                  
                             printf("\n------------------\n");
                             printf("Nome: %s\n", nome);
                             printf("Materia: %s\n", materia);
@@ -116,12 +128,11 @@ int main() {
                             encontrou = 1;
                             contadorAlunos ++;
                         }
-                        printf("\nTotal de numero de alunos encontrados para essa materia: %i\n", contadorAlunos);
+                        printf("\nTotal de alunos encontrados para essa materia: %i\n", contadorAlunos);
                         
                     }else if ((strcmp(escolhaMateria, "2") == 0) || (strcmp(escolhaMateria, "portugues") == 0))
                     {
-                        printf("\nRelatorio de portugues:\n");
-                        encontrou = 1;
+                        printf("\nRelatorio de Analise e Projeto de Sistemas:\n");
                         
                         fgets(linha02, sizeof(linha02), pim02);//pular o cabeçalho
                         while (fgets(linha02, sizeof(linha02), pim02) != NULL)
@@ -139,10 +150,11 @@ int main() {
                             encontrou = 1;
                             contadorAlunos ++;
                         }
-                        printf("\nTotal de numero de alunos encontrados para essa materia: %i\n", contadorAlunos);
+                        printf("\nTotal de alunos encontrados para essa materia: %i\n", contadorAlunos);
 
                     }else if (strcmp(escolhaMateria, "3") == 0)
                     {
+                        printf("\nRelario de \n");
                         fgets(linha03, sizeof(linha03), pim03);
                         //int contadorAlunos = 0;//se eu cololocar essa variavel dentro do loop while, ela sempre vai voltar a ser 0 e nao fará a logica que eu quero, que no caso seria a cada aluno achado, incrementar 1 a variavel contador, isso é para a gente saber quantos alunos tem em cada relatorio. Vou inicializar essa variavel
                         while (fgets(linha03, sizeof(linha03), pim03) != NULL)
@@ -158,7 +170,7 @@ int main() {
                             encontrou = 1;
                             contadorAlunos ++;
                         }
-                        printf("\nTotal de numero de alunos encontrados para essa materia: %i\n", contadorAlunos);
+                        printf("\nTotal de alunos encontrados para essa materia: %i\n", contadorAlunos);
                     }
                     
                     if (encontrou == 0) {
@@ -178,14 +190,11 @@ int main() {
                         while (getchar() != '\n'); // essa função faz a limpeza do buffer, caso o usuario digitar uma letra nessa validação o programa vai entrar em um loop eterno, pq o programa esta esperando um int e nao um char, ai essa variavel fazer a limpeza para nao ocorrer o loop
                         continue;
                     }
-                    
-                    
-                    
 
                 } while (novamente == 1);
                 break;
 
-            case '0':
+            case 0:
                 dnv = 0;//se no menu eu escolher 0, a sistema sair do programa pq a variavel "dnv" estara com o valor de 0, logo ela na cai na condição do primeiro do while, como visto ali em baixo
                 //caso queira testar, mude essa variavel "dnv = 0" para "dnv = 1" o loop vai continuar pq a condição ali de baixo retornou true, logo, o loop se repete
                 printf("Saindo do sistema...\n");
@@ -201,7 +210,7 @@ int main() {
     fclose(pim02);
     fclose(pim03);
     return 0;
-    system("pause");
+    //system("pause");
 }
 /* 
                     while (fgets(linha, sizeof(linha), pim01) != NULL) {

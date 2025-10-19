@@ -54,7 +54,7 @@ def carregar_disciplinas():
     return {
         '1': "Algoritmos e Estruturas de Dados em Python",
         '2': "Análise e Projeto de Sistemas",
-        '3': "Engenharia de Software Ágil",
+        '3': "Engenharia de Software Agil",  'Tirei o acento do "Ágil" para nao der erro'
         '4': "Programação Estruturada em C"
     }
 

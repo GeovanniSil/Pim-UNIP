@@ -7,24 +7,32 @@ int main(){
     /* theo;4.4;geovanni;mae;carlos;
     tatu;4.0;5.0;7.0;matematica */
     //ainda vou comentar esse codigo
+
     if (pim01 == NULL)
     {
         printf("erro");
     }
+    char frase[70];
+    while (fgets(frase, sizeof(frase), pim01) != NULL)
+    {
+        printf("%s", frase);
+    }
     
     char aluno[15];
-    printf("digite o aluno:\n");
+    printf("digite o aluno: ");
     scanf("%s", aluno); 
     
-    char frase[70];
+    
     char * ponteiro;
     int encontrou = 0;
 
     //função strtok, strtok serve para separar uma string em partes menores usando um caractere delimitador. No seu código, ele está separando cada campo da linha do arquivo para comparar o nome do aluno
+    fseek(pim01, 0, SEEK_SET);
     while (fgets(frase, sizeof(frase), pim01) != NULL)
     {
         frase[strcspn(frase, "\n")] = '\0';
         ponteiro = strtok(frase, ";\n");
+        //printf("%s", frase);
         while (ponteiro != NULL)
         {           
             if (strcmp(aluno, ponteiro) == 0)
