@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 int main() {
     FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Algoritmos_e_Estruturas_de_Dados_em_Python.csv", "r");
@@ -12,6 +13,11 @@ int main() {
 
     if (pim02 == NULL) {
         printf("Erro ao abrir o arquivo.\n");
+        return 1;
+    }
+
+    if (pim03 == NULL) {
+        printf("Erro ao abrir o arquivo Engenharia_de_Software_Agil.csv\n");
         return 1;
     }
 
@@ -28,13 +34,14 @@ int main() {
         printf("Digite sua escolha: ");
 
         scanf(" %i", &escolha);
-        if (escolha != 1) {
+        if (escolha != 1 && escolha != 2) {
             printf("Entrada inválida! Digite um número.\n");
 
             // Limpar o buffer
             while (getchar() != '\n'); // descarta até o Enter
             //continue; // volta pro início do loop
         }
+        
 
         char linha[100];//variavel onde esta sendo salvo os dados do arquivo "pim01"
         char linha02[100];//variavel onde esta sendo salvo os dados do arquivo "pim02"
@@ -57,25 +64,50 @@ int main() {
                             
                 printf("Busca por aluno.\n");
                 do{
-                printf("Deseja fazer uma busca por todas as meterias ou somente uma?\n");
-                printf(" [1] Materia especifica\n");
-                printf(" [2] Geral\n");
-                scanf("%i", &escolhaMateriaAluno);
+                    printf("Deseja fazer uma busca por todas as meterias ou somente uma?\n");
+                    printf(" [1] Materia especifica\n");
+                    printf(" [2] Geral\n");
+                    scanf("%i", &escolhaMateriaAluno);
 
+                    do{
+                    if (escolhaMateriaAluno != 1 && escolhaMateriaAluno != 2) {
+                        printf("Entrada invalida! Digite um numero.\n");
+                        printf("tente novamente\n");
+                        scanf("%i", &escolhaMateriaAluno);
+
+                        // Limpar o buffer
+                        while (getchar() != '\n'); // descarta até o Enter
+                        //continue; // volta pro início do loop
+                    }
+                    }while (escolhaMateriaAluno != 1 && escolhaMateriaAluno != 2);
+                     
+                    
+            
                 switch (escolhaMateriaAluno)
                 {
                 case 1:
                     printf("Escolha uma materia:\n");
                     printf("[1] Algoritmos_e_Estruturas_de_Dados_em_Python\n");
+                    printf("[2] Analise_e_Projeto_de_Sistemas\n");
                     scanf("%i", &escolhaMateriaAluno);
 
+                    do{
                     if (escolhaMateriaAluno == 1)
-                    {
-                        printf("Algoritmos_e_Estruturas_de_Dados_em_Python\n");
+                    {    
+                        printf("\nAlgoritmos_e_Estruturas_de_Dados_em_Python\n");
                         printf("digite o nome dele: ");
                         fgets(linha, sizeof(linha), pim01);
                         rewind(pim01);
+                        encontrou = 0; //resetando a flag de busca para nao ficar com o valor "1" dps que encontramos o aluno
                         scanf("%s", nomeAluno);
+
+                        do {
+                            if (isdigit(nomeAluno[0])) {//função isdigit verifica se oq o usuario digitou é um numero, se for, a condição é alimentada e vai para o loop, se for uma letra, nao entra no loop
+                                printf("\nNome invalido. Digite apenas letras.\n");
+                                scanf("%s", nomeAluno);
+                            }
+                        } while (isdigit(nomeAluno[0]));                       
+
                         while (fgets(linha, sizeof(linha), pim01) != NULL)
                         {
                             sscanf(linha, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);
@@ -90,12 +122,52 @@ int main() {
                         }
                         if (encontrou == 0)
                         {
-                            printf("aluno nao encontrado para essa materia\n");
+                            printf("\naluno nao encontrado para essa materia\n");
                         }
                         
                     }
+
+                    if (escolhaMateriaAluno == 2)
+                    {
+                        printf("\nAlgoritmos_e_Estruturas_de_Dados_em_Python\n");
+                        printf("digite o nome dele: ");
+                        fgets(linha02, sizeof(linha02), pim02);
+                        rewind(pim02);
+                        encontrou = 0;
+                        scanf("%s", nomeAluno);
+                        //escolhaMateriaAluno = 0;
+                        
+                        do {
+                            if (isdigit(nomeAluno[0])) {//função isdigit verifica se oq o usuario digitou é um numero, se for, a condição é alimentada e vai para o loop, se for uma letra, nao entra no loop
+                                printf("\nNome invalido. Digite apenas letras.\n");
+                                scanf("%s", nomeAluno);
+                            }
+                        } while (isdigit(nomeAluno[0]));                       
+
+                        while (fgets(linha02, sizeof(linha02), pim02) != NULL)
+                        {
+                            sscanf(linha02, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);
+                            if (strcmp(nomeAluno, nome) == 0)
+                            {
+                                printf("deu certo\n");  
+                                encontrou = 1;// A variável "encontrou" funciona como uma flag, assim que eu encontro oq eu quero, ela muda para 1 e nao vai para a condição ali de baixo fora do while que esta lendoo arquivo. 
+                                            // Ela começa com valor 0 e muda para 1 quando o aluno é encontrado, isso significa que deu certo na nossa procura. Caso nao achar nada, a variavel vai continuar 0 (pq eu a iniciei como zero no começo do codigo) e vai entrar na condição ali de baixo 
+                                            // eu nao coloco esse if de baixo pq ele vai printar toda hora que o while passar por uma linha e a condição do if de cima nao for satisfeita, vai printar "aluno nao encontrado" todas as vezes que ele passar por uma linha e nao encontrar o aluno que eu quero saber
+                                
+                            }    
+                        }
+
+                        if (encontrou == 0)
+                        {
+                            printf("\naluno nao encontrado para essa materia\n");
+                        }
+
+                        
+                    }
+                    //break;
+                    
  
-                    printf("Deseja buscar outro aluno? Digite 1 para SIM ou 0 para NAO: ");
+                    printf("\nDeseja buscar outro aluno? Digite 1 para SIM ou 0 para NAO: ");
                     scanf("%i", &novamente);
                     
                     if (novamente == 0)
@@ -106,8 +178,10 @@ int main() {
                         printf("Escolha errada, digite novamente: ");//força o usuario digitar 1 ou 0, para continuar ou sair do menu de relatorio
                         scanf("%i", &novamente);
                         while (getchar() != '\n'); // essa função faz a limpeza do buffer, caso o usuario digitar uma letra nessa validação o programa vai entrar em um loop eterno, pq o programa esta esperando um int e nao um char, ai essa variavel fazer a limpeza para nao ocorrer o loop
-                        continue;
+                        //continue;
                     }
+                    //break;
+                    }while(novamente == 1);
                     break;
                 case 2:
                     printf("ainda nao imprementando\n");
@@ -124,57 +198,15 @@ int main() {
                         while (getchar() != '\n'); // essa função faz a limpeza do buffer, caso o usuario digitar uma letra nessa validação o programa vai entrar em um loop eterno, pq o programa esta esperando um int e nao um char, ai essa variavel fazer a limpeza para nao ocorrer o loop
                         continue;
                     }
-                default:
+                case 0:
+                    printf("saindo");
                     break;
+                /* default:
+                    printf("saindo");
+                    break; */
                 }
                 }while (novamente == 1);
-                
-                
-                
-
-                /* printf("Escolha uma materia:\n");
-                printf("[1] Algoritmos_e_Estruturas_de_Dados_em_Python\n");
-                //scanf("%s", escolhaMateriaAluno); */
-                    
-                    /* if (strcmp(escolhaMateriaAluno, "1") == 0)
-                    {
-                        printf("nome do aluno? ");
-                        scanf("%s", nomeAluno);
-                        fgets(linha, sizeof(linha), pim01);
-                        rewind(pim01);//A função rewind(arquivo); reposiciona o ponteiro de leitura/escrita do arquivo para o início. Ou seja: depois de ler o arquivo até o fim (ou parte dele), o ponteiro está “lá embaixo”.O rewind() faz ele voltar para o começo — como se você estivesse rebobinando uma fita.
-                        //semelhante ao fseek(pim01, 0, SEEK_SET); que usamo ali em baixo                        
-                        while (fgets(linha, sizeof(linha), pim01) != NULL)
-                        {
-                            sscanf(linha, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);
-                            if (strcmp(nomeAluno, nome) == 0)
-                            {
-                                printf("deu certo\n");  
-                                encontrou = 1;// A variável "encontrou" funciona como uma flag, assim que eu encontro oq eu quero, ela muda para 1 e nao vai para a condição ali de baixo fora do while que esta lendoo arquivo. 
-                                            // Ela começa com valor 0 e muda para 1 quando o aluno é encontrado, isso significa que deu certo na nossa procura. Caso nao achar nada, a variavel vai continuar 0 (pq eu a iniciei como zero no começo do codigo) e vai entrar na condição ali de baixo 
-                                            // eu nao coloco esse if de baixo pq ele vai printar toda hora que o while passar por uma linha e a condição do if de cima nao for satisfeita, vai printar "aluno nao encontrado" todas as vezes que ele passar por uma linha e nao encontrar o aluno que eu quero saber
-                                //break;
-                            }    
-                        }
-                        rewind(pim02);//A função rewind(arquivo); reposiciona o ponteiro de leitura/escrita do arquivo para o início. Ou seja: depois de ler o arquivo até o fim (ou parte dele), o ponteiro está “lá embaixo”.O rewind() faz ele voltar para o começo — como se você estivesse rebobinando uma fita.
-                        //semelhante ao fseek(pim01, 0, SEEK_SET); que usamo ali em baixo 
-                        fgets(linha02, sizeof(linha02), pim02);
-                        while (fgets(linha02, sizeof(linha02), pim02) != NULL)
-                        {
-                            sscanf(linha02, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);
-                            if (strcmp(nomeAluno, nome) == 0)
-                            {
-                                printf("deu certo\n");  
-                                encontrou = 1;// A variável "encontrou" funciona como uma flag, assim que eu encontro oq eu quero, ela muda para 1 e nao vai para a condição ali de baixo fora do while que esta lendoo arquivo. 
-                                            // Ela começa com valor 0 e muda para 1 quando o aluno é encontrado, isso significa que deu certo na nossa procura. Caso nao achar nada, a variavel vai continuar 0 (pq eu a iniciei como zero no começo do codigo) e vai entrar na condição ali de baixo 
-                                            // eu nao coloco esse if de baixo pq ele vai printar toda hora que o while passar por uma linha e a condição do if de cima nao for satisfeita, vai printar "aluno nao encontrado" todas as vezes que ele passar por uma linha e nao encontrar o aluno que eu quero saber
-                            }    
-                        }
-                        if (encontrou == 0)
-                        {
-                            printf("aluno nao encontrado");
-                        }
-                    } */
-                   
+                                   
             break;                                
             case 2:// case 2, serve para a gente escolher qual materia queremos olhar o relatorio, ainda nao esta completo, deixarei em loop para a gente olhar quantas vezes quisermos, porem, o caminho é esse
                 do {
@@ -187,7 +219,7 @@ int main() {
                     printf("  [1] Algoritmos_e_Estruturas_de_Dados_em_Python\n");
                     printf("  [2] Analise_e_Projeto_de_Sistemas\n");
                     printf("  [3] Química\n");
-                    printf("Digite o nome ou o numero da materia: ");
+                    printf("Digite a materia da sua escolha: ");
 
                     scanf("%s", escolhaMateria);
 
@@ -286,7 +318,7 @@ int main() {
                         printf("Escolha errada, digite novamente: ");//força o usuario digitar 1 ou 0, para continuar ou sair do menu de relatorio
                         scanf("%i", &novamente);
                         while (getchar() != '\n'); // essa função faz a limpeza do buffer, caso o usuario digitar uma letra nessa validação o programa vai entrar em um loop eterno, pq o programa esta esperando um int e nao um char, ai essa variavel fazer a limpeza para nao ocorrer o loop
-                        continue;
+                        //continue;
                     }
 
                 } while (novamente == 1);
@@ -308,7 +340,7 @@ int main() {
     fclose(pim02);
     fclose(pim03);
     return 0;
-    //system("pause");
+    system("pause");
 }
 /* 
                     while (fgets(linha, sizeof(linha), pim01) != NULL) {
