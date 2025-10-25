@@ -185,13 +185,53 @@ int main()
                                 printf("\naluno nao encontrado para essa materia\n");
                             }
                         }
+                        
+                        if (escolhaMateriaAluno == 3)
+                        {
+                            printf("\nAnalise_e_Projeto_de_Sistemas\n");
+                            printf("digite o nome dele: ");
+                            fgets(linha02, sizeof(linha02), pim02); // pula o cabeçalho
+                            rewind(pim02);
+                            encontrou = 0;
+                            int c;
+                            while ((c = getchar()) != '\n' && c != EOF); // limpa o buffer, tira o \n que o fgets acaba pegando qnd a gente digita algo
+                            fgets(nomeAluno, sizeof(nomeAluno), stdin);
+                            nomeAluno[strcspn(nomeAluno, "\n")] = '\0';
+                            // escolhaMateriaAluno = 0;
+
+                            do
+                            {
+                                if (isdigit(nomeAluno[0]))
+                                { // função isdigit verifica se oq o usuario digitou é um numero, se for, a condição é alimentada e vai para o loop, se for uma letra, nao entra no loop
+                                    printf("\nNome invalido. Digite apenas letras.\n");
+                                    scanf("%s", nomeAluno);
+                                }
+                            } while (isdigit(nomeAluno[0]));
+
+                            while (fgets(linha02, sizeof(linha02), pim02) != NULL)
+                            {
+                                sscanf(linha02, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);
+                                if (strcmp(nomeAluno, nome) == 0)
+                                {
+                                    printf("deu certo\n");
+                                    encontrou = 1; // A variável "encontrou" funciona como uma flag, assim que eu encontro oq eu quero, ela muda para 1 e nao vai para a condição ali de baixo fora do while que esta lendoo arquivo.
+                                                   // Ela começa com valor 0 e muda para 1 quando o aluno é encontrado, isso significa que deu certo na nossa procura. Caso nao achar nada, a variavel vai continuar 0 (pq eu a iniciei como zero no começo do codigo) e vai entrar na condição ali de baixo
+                                                   // eu nao coloco esse if de baixo pq ele vai printar toda hora que o while passar por uma linha e a condição do if de cima nao for satisfeita, vai printar "aluno nao encontrado" todas as vezes que ele passar por uma linha e nao encontrar o aluno que eu quero saber
+                                }
+                            }
+
+                            if (encontrou == 0)
+                            {
+                                printf("\naluno nao encontrado para essa materia\n");
+                            }
+                        }
 
                         if (escolhaMateriaAluno == 0)
                         {
                             printf("saindo\n");
                             break;
                         }
-                        
+
                         printf("\nDeseja buscar outro aluno? Digite 1 para SIM ou 0 para NAO: ");
                         scanf("%i", &novamente);
 
