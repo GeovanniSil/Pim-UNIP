@@ -39,6 +39,8 @@ int main()
         printf("Digite sua escolha: ");
 
         scanf(" %i", &escolha);
+
+        while (getchar() != '\n');
         if (escolha < 0 || escolha > 2)
         {
             printf("Entrada inválida! Digite um número.\n");
@@ -59,11 +61,9 @@ int main()
         int novamente;
         char turma[20];
         char nomeAluno[20];
-        float t, f, nota;
+        float nota;
         char escolhaMateria[20]; //
         int escolhaMateriaAluno; //
-        // int escolhaMateriaAluno;
-        int testeSub;
         char raAluno[10];
         switch (escolha)
         {
@@ -72,19 +72,20 @@ int main()
             printf("Busca por aluno.\n");
             do
             {
+                char entrada[10];
                 printf("Deseja fazer uma busca por todas as meterias ou somente uma?\n");
                 printf(" [1] Materia especifica\n");
                 printf(" [2] Geral\n");
-                scanf("%i", &escolhaMateriaAluno);
-
+                fgets(entrada, sizeof(entrada), stdin);
+                escolhaMateriaAluno = atoi(entrada);//converte a entrada para int
                 do
                 {
                     if (escolhaMateriaAluno != 1 && escolhaMateriaAluno != 2 && escolhaMateriaAluno != 3)
                     {
                         printf("Entrada invalida! Digite um numero.\n");
                         printf("tente novamente\n");
-                        scanf("%i", &escolhaMateriaAluno);
-
+                        fgets(entrada, sizeof(entrada), stdin);;
+                        escolhaMateriaAluno = atoi(entrada);
                         // Limpar o buffer
                         while (getchar() != '\n')
                             ; // descarta até o Enter
@@ -185,13 +186,13 @@ int main()
                                 printf("\naluno nao encontrado para essa materia\n");
                             }
                         }
-                        
+
                         if (escolhaMateriaAluno == 3)
                         {
-                            printf("\nAnalise_e_Projeto_de_Sistemas\n");
+                            printf("\nEngenharia_de_Software_Agil\n");
                             printf("digite o nome dele: ");
-                            fgets(linha02, sizeof(linha02), pim02); // pula o cabeçalho
-                            rewind(pim02);
+                            fgets(linha03, sizeof(linha03), pim03); // pula o cabeçalho
+                            rewind(pim03);
                             encontrou = 0;
                             int c;
                             while ((c = getchar()) != '\n' && c != EOF); // limpa o buffer, tira o \n que o fgets acaba pegando qnd a gente digita algo
@@ -208,9 +209,9 @@ int main()
                                 }
                             } while (isdigit(nomeAluno[0]));
 
-                            while (fgets(linha02, sizeof(linha02), pim02) != NULL)
+                            while (fgets(linha03, sizeof(linha03), pim03) != NULL)
                             {
-                                sscanf(linha02, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);
+                                sscanf(linha03, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);
                                 if (strcmp(nomeAluno, nome) == 0)
                                 {
                                     printf("deu certo\n");
@@ -235,10 +236,11 @@ int main()
                         printf("\nDeseja buscar outro aluno? Digite 1 para SIM ou 0 para NAO: ");
                         scanf("%i", &novamente);
 
+
                         if (novamente == 0)
                             break;
 
-                        while (novamente != 1)
+                        while (novamente != 1 && novamente != 2 && novamente !=0)
                         {
                             printf("Escolha errada, digite novamente: "); // força o usuario digitar 1 ou 0, para continuar ou sair do menu de relatorio
                             scanf("%i", &novamente);
@@ -259,12 +261,11 @@ int main()
                     if (novamente == 0)
                         break;
 
-                    while (novamente != 1)
+                    while (novamente != 1 && novamente !=0)
                     {
                         printf("Escolha errada, digite novamente: "); // força o usuario digitar 1 ou 0, para continuar ou sair do menu de relatorio
                         scanf("%i", &novamente);
-                        while (getchar() != '\n')
-                            ; // essa função faz a limpeza do buffer, caso o usuario digitar uma letra nessa validação o programa vai entrar em um loop eterno, pq o programa esta esperando um int e nao um char, ai essa variavel fazer a limpeza para nao ocorrer o loop
+                        while (getchar() != '\n'); // essa função faz a limpeza do buffer, caso o usuario digitar uma letra nessa validação o programa vai entrar em um loop eterno, pq o programa esta esperando um int e nao um char, ai essa variavel fazer a limpeza para nao ocorrer o loop
                         continue;
                     }
                 case 0:
@@ -292,11 +293,11 @@ int main()
                 printf("Digite a materia da sua escolha: ");
 
                 scanf("%s", escolhaMateria);
-
-                while (strcmp(escolhaMateria, "1") != 0 && strcmp(escolhaMateria, "matematica") != 0 && strcmp(escolhaMateria, "2") != 0 && strcmp(escolhaMateria, "portugues") != 0 && strcmp(escolhaMateria, "3") != 0 && strcmp(escolhaMateria, "quimica") != 0)
+                while (getchar() != '\n');
+                while (strcmp(escolhaMateria, "1") != 0 && strcmp(escolhaMateria, "2") != 0 && strcmp(escolhaMateria, "3") != 0)
                 {
                     printf("Materia não encontrada. Tente novamente: ");
-                    scanf("%s", escolhaMateria);
+                    fgets(escolhaMateria, sizeof(escolhaMateria), stdin);
                     // validação sobre qual materia a gente quer olhar, "strcmp" é uma função que compara strings, que bem util para a gente fazer a comparação entre as materias que esta no nosso arquivo txt. Ex, se eu escolher a opção 1, será feita a verificação ali embaixo, se a variavel "escolhaMateria" for igual a 1 e a variavel "materia" for igual a "matematica", o sistema exibira o relatorio sobre a meteria escolhida. Esse comportamento serve para os outros numeros.
                     // caso a gente escolha uma materia que nao esteja dentro da condição, o sistema entrará no loop, vou acrescentar uma forma de sair do programa dentro desse loop aq, caso o usuario nao queira mais olhar as notas
                 }
@@ -304,7 +305,7 @@ int main()
                 // essa função pula o cabeçalho do meu arquivo txt, ex, na primiera linha terá id;nome e a nas linhas de baixo terá, 1;geovanni;unip, essa função vai pular o id;nome e seguir apenas com as linhas de baixo
                 // a função fgets le apenas a primeira linha de um arquivo
 
-                if ((strcmp(escolhaMateria, "1") == 0) || (strcmp(escolhaMateria, "Algoritmos_e_Estruturas_de_Dados_em_Python") == 0))
+                if ((strcmp(escolhaMateria, "1") == 0))
                 {
                     printf("\nRelatorio de Algoritmos_e_Estruturas_de_Dados_em_Python:\n");
                     fgets(linha, sizeof(linha), pim01); // essa função pula o cabeçalho do meu arquivo txt, ex, na primiera linha terá id;nome e a nas linhas de baixo terá, 1;geovanni;unip, essa função vai pular o id;nome e seguir apenas com as linhas de baixo
@@ -326,7 +327,7 @@ int main()
                     }
                     printf("\nTotal de alunos encontrados para essa materia: %i\n", contadorAlunos);
                 }
-                else if ((strcmp(escolhaMateria, "2") == 0) || (strcmp(escolhaMateria, "portugues") == 0))
+                else if ((strcmp(escolhaMateria, "2") == 0))
                 {
                     printf("\nRelatorio de Analise e Projeto de Sistemas:\n");
 
@@ -375,7 +376,7 @@ int main()
 
                 printf("Deseja buscar outra materia? Digite 1 para SIM ou 0 para NAO: ");
                 scanf("%i", &novamente);
-
+                linha[strcspn(linha, "\n")] = 0; // remove \n
                 if (novamente == 0)
                     break;
 
@@ -407,5 +408,5 @@ int main()
     fclose(pim02);
     fclose(pim03);
     return 0;
-    //system("pause");
+    system("pause");
 }
