@@ -77,26 +77,30 @@ int main()
             printf("Buscar por aluno\n");
             printf("Qual modulo deseja ir?\n");
             printf(" [1] Materia especifica\n [2] Geral\n");
-            //scanf("%i", &escolhaModuloCase1);
-            //while (getchar() != '\n');
-            
-            while (1) {
+            // scanf("%i", &escolhaModuloCase1);
+            // while (getchar() != '\n');
+
+            while (1)
+            {
                 int resultado;
                 printf("Digite sua escolha: ");
 
                 // Tenta ler um número inteiro
-                resultado = scanf("%i", &escolhaModuloCase1);//Usamos dois int (var resultado e escolhamodulocase1)porque um guarda o valor digitado, e o outro guarda se a leitura deu certo. //São papéis diferentes, embora ambos usem o mesmo tipo de dado. 
+                resultado = scanf("%i", &escolhaModuloCase1); // Usamos dois int (var resultado e escolhamodulocase1)porque um guarda o valor digitado, e o outro guarda se a leitura deu certo. //São papéis diferentes, embora ambos usem o mesmo tipo de dado.
 
                 // Limpa o buffer de entrada
-                while (getchar() != '\n');
+                while (getchar() != '\n')
+                    ;
 
                 // Verifica se a entrada é válida (número e dentro do intervalo)
-                if (resultado != 1) {// validação da entrada do usuario, se ele digitar uma letra, o sistema vai barrar e pedir novamente a escolha//estudar melhor sobre essa validação, joga no chat e peça para ele explicar e dps assitaa video no youtube sobre
+                if (resultado != 1)
+                { // validação da entrada do usuario, se ele digitar uma letra, o sistema vai barrar e pedir novamente a escolha//estudar melhor sobre essa validação, joga no chat e peça para ele explicar e dps assitaa video no youtube sobre
                     printf("Entrada inválida! Digite apenas números (1 ou 2).\n");
                     continue;
                 }
 
-                if (escolhaModuloCase1 != 1 && escolhaModuloCase1 != 2) {
+                if (escolhaModuloCase1 != 1 && escolhaModuloCase1 != 2)
+                {
                     printf("Opção inválida! Escolha 1 ou 2.\n");
                     continue;
                 }
@@ -104,41 +108,79 @@ int main()
                 break;
             }
 
+            int escMateriaAluno;         // variavel para a escolha de qual materia voce deseja procurar o aluno
             if (escolhaModuloCase1 == 1) // busca aluno por materia especifica
             {
-                printf("escolha 1");
-                
+                printf("qual materia deseja olhar o aluno?\n");
+                printf("1 Algoritmos_e_Estruturas_de_Dados_em_Python\n2 Analise_e_Projeto_de_Sistemas\n");
+                // scanf("%i", &escMateriaAluno);
+
+                int resultadoEscolhaMate;
+                while (1)
+                {
+                    // scanf("%i", &escMateriaAluno);
+                    resultadoEscolhaMate = scanf("%i", &escMateriaAluno);
+
+                    while (getchar() != '\n');
+
+                    if (resultadoEscolhaMate != 1)
+                    {
+                        printf("Entrada inválida! Digite apenas números (1 ou 2).\n");
+                        continue;
+                    }
+                    if (escMateriaAluno != 1 && escMateriaAluno != 2)
+                    {
+                        printf("Entrada inválida! Digite apenas números (1 ou 2).\n");
+                        continue;
+                    }
+                    break;
+                }
+                char nomeAlunoCase1[15];
+                char dadosMateriaBusca[100]; // variavel que será guardado os dados dos arquivos assim que a gente ler ele
+                char nomeMateriaCase1[20];   // variavel onde será guardado o nome da materia que a gente escolher aq em baixo
+                FILE *materiaEscolinhaBusca; // ponteiro que será usado para abrir os arquivos la de cima
+                if (escMateriaAluno == 1)
+                {
+                    materiaEscolinhaBusca = pim01;
+                    strcpy(nomeMateriaCase1, "Algoritmos_e_Estruturas_de_Dados_em_Python");
+                    printf("nome do aluno: ");
+                    fgets(nomeAlunoCase1, sizeof(nomeAlunoCase1), stdin);
+                }
+                if (escMateriaAluno == 2)
+                {
+                    strcpy(nomeMateriaCase1, "Analise_e_Projeto_de_Sistemas");
+                    materiaEscolinhaBusca = pim02;
+                }
+                if (escMateriaAluno == 3)
+                {
+                    strcpy(nomeMateriaCase1, "Engenharia_de_Software_Agil");
+                    materiaEscolinhaBusca = pim03;
+                }
+
+                fseek(materiaEscolinhaBusca, 0, SEEK_SET); // reinicia o arquivo toda vez que a gente querer olhar o relatorio
+                int encontrouCase1 = 0;
+                fgets(dadosMateriaBusca, sizeof(dadosMateriaBusca), materiaEscolinhaBusca);
+                while (fgets(dadosMateriaBusca, sizeof(dadosMateriaBusca), materiaEscolinhaBusca) != NULL)
+                {
+                    sscanf(dadosMateriaBusca, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);
+
+                    nomeAlunoCase1[strcspn(nomeAlunoCase1, "\n")] = '\0'; // essa função faz a limpeza da quebra de linha lida pelo o fgets, quando usamos o fgets ele le a \n no final do texto, por isso a validação no aluno aq de baixo nao estava pegando antes de usar esssa função para tirar o \n, o fget lia assim "nomeAluno\n" e guardava na variavel "nomeAlunoCase1", quando ia para a comparação aq de baixo, era sempre falsa pq a var "nomeAlunoCase1" esta guardando "nomeAluno\n" e a var "nome" guardava "nomeAluno" sem a quebra de linha
+                    if (strcmp(nomeAlunoCase1, nome) == 0)
+                    {
+                        printf("aluno encontrado %s\n", nomeAlunoCase1);
+                        encontrouCase1 = 1;
+                    }
+                }
+                if (encontrouCase1 == 0)
+                {
+                    while (getchar() != '\n');
+                    printf("nao encontrdo");
+                }
             }
             else if (escolhaModuloCase1 == 2) // busca aluno em todas as materias
             {
                 printf("escolha 2");
             }
-            //while (getchar() != '\n'); // limpeza do buffer para nao der erro no proximo scanf
-
-            /* case 2:
-                printf("ainda nao imprementando\n");
-                printf("Deseja buscar outro aluno? Digite 1 para SIM ou 0 para NAO: ");
-                scanf("%i", &novamente);
-
-                if (novamente == 0)
-                    break;
-
-                while (novamente != 1 && novamente != 0)
-                {
-                    printf("Escolha errada, digite novamente: "); // força o usuario digitar 1 ou 0, para continuar ou sair do menu de relatorio
-                    scanf("%i", &novamente);
-                    while (getchar() != '\n')
-                        ; // essa função faz a limpeza do buffer, caso o usuario digitar uma letra nessa validação o programa vai entrar em um loop eterno, pq o programa esta esperando um int e nao um char, ai essa variavel fazer a limpeza para nao ocorrer o loop
-                    continue;
-                }
-            case 0:
-                printf("saindo");
-                break;
-                /* default:
-                    printf("saindo");
-                    break; */
-            //        }
-            //} while (novamente == 1);
 
             break;
         case 2:
