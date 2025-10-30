@@ -2,9 +2,11 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h> // precisa pra usar atoi()
+#include <locale.h>
 
 int main()
 {
+    setlocale(LC_ALL, "Portuguese_Brazil");
     FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Algoritmos_e_Estruturas_de_Dados_em_Python.csv", "r");
     FILE *pim02 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Analise_e_Projeto_de_Sistemas.csv", "r");
     FILE *pim03 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Engenharia_de_Software_Agil.csv", "r");
@@ -56,7 +58,7 @@ int main()
         char linha[100];   // variavel onde esta sendo salvo os dados do arquivo "pim01"
         char linha02[100]; // variavel onde esta sendo salvo os dados do arquivo "pim02"
         char linha03[100]; // variavel onde esta sendo salvo os dados do arquivo "pim03"
-        char nome[40];
+        char nome[40], escolhaStr[10];
         char materia[40];
         float n1 = 0, n2 = 0, n3;
         int encontrou = 0;
@@ -73,116 +75,131 @@ int main()
         switch (opcao)
         {
         case 1:
-
-            printf("Buscar por aluno\n");
-            printf("Qual modulo deseja ir?\n");
-            printf(" [1] Materia especifica\n [2] Geral\n");
-            // scanf("%i", &escolhaModuloCase1);
-            // while (getchar() != '\n');
-
-            while (1)
+        { // Busca por aluno
+            int buscarNovamente = 1;
+            while (buscarNovamente)
             {
-                int resultado;
-                printf("Digite sua escolha: ");
+                char nomeAluno[50];
+                int tipoBusca = 0;
 
-                // Tenta ler um número inteiro
-                resultado = scanf("%i", &escolhaModuloCase1); // Usamos dois int (var resultado e escolhamodulocase1)porque um guarda o valor digitado, e o outro guarda se a leitura deu certo. //São papéis diferentes, embora ambos usem o mesmo tipo de dado.
+                // Escolha do tipo de busca
+                do
+                {
+                    printf("Deseja buscar por todas as materias ou somente uma?\n");
+                    printf("[1] Materia especifica\n");
+                    printf("[2] Geral\n");
+                    fgets(escolhaStr, sizeof(escolhaStr), stdin);
 
-                // Limpa o buffer de entrada
-                while (getchar() != '\n')
-                    ;
+                    // sscanf retorna 1 se conseguiu ler um número inteiro corretamente
+                    if (sscanf(escolhaStr, "%d", &tipoBusca) != 1 || tipoBusca < 1 || tipoBusca > 2)
+                    {
+                        printf("Entrada inválida! Digite apenas 1 ou 2.\n");
+                        continue; // volta para o início do loop
+                    }
 
-                // Verifica se a entrada é válida (número e dentro do intervalo)
-                if (resultado != 1)
-                { // validação da entrada do usuario, se ele digitar uma letra, o sistema vai barrar e pedir novamente a escolha//estudar melhor sobre essa validação, joga no chat e peça para ele explicar e dps assitaa video no youtube sobre
-                    printf("Entrada inválida! Digite apenas números (1 ou 2).\n");
-                    continue;
+                    break; // entrada válida
+                } while (1);
+
+                if (tipoBusca == 1)
+                {
+                    int materiaEscolhida = 0;
+
+                    // Escolha da matéria
+                    do
+                    {
+                        printf("\nEscolha a materia:\n");
+                        printf("[1] Algoritmos_e_Estruturas_de_Dados_em_Python\n");
+                        printf("[2] Analise_e_Projeto_de_Sistemas\n");
+                        printf("[3] Engenharia_de_Software_Agil\n");
+                        fgets(escolhaStr, sizeof(escolhaStr), stdin);
+
+                        if (sscanf(escolhaStr, "%d", &materiaEscolhida) != 1 || materiaEscolhida < 1 || materiaEscolhida > 3)
+                        {
+                            printf("Entrada inválida! Digite apenas 1, 2 ou 3.\n");
+                            continue;
+                        }
+
+                        break;
+                    } while (1);
+
+                    /* FILE *arquivo = (materiaEscolhida == 1) ? pim01 : // operador ternário, mesma coisa que if e else abaixo, porem, menor
+                                        (materiaEscolhida == 2) ? pim02 vou deixar ele aq para eu estudar mais no futuro
+                                                                : pim03; */
+
+                    FILE *arquivo;
+
+                    if (materiaEscolhida == 1)
+                        arquivo = pim01;
+                    else if (materiaEscolhida == 2)
+                        arquivo = pim02;
+                    else
+                        arquivo = pim03;
+
+                    char nomeMateria[60];//variavel onde será atribuido os nomes das materias
+                    if (materiaEscolhida == 1)
+                        strcpy(nomeMateria, "Algoritmos_e_Estruturas_de_Dados_em_Python");
+                    else if (materiaEscolhida == 2)
+                        strcpy(nomeMateria, "Analise_e_Projeto_de_Sistemas");
+                    else
+                        strcpy(nomeMateria, "Engenharia_de_Software_Agil");
+
+                    // Nome do aluno
+                    printf("\nDigite o nome do aluno: ");
+                    fgets(nomeAluno, sizeof(nomeAluno), stdin);
+                    nomeAluno[strcspn(nomeAluno, "\n")] = 0;
+
+                    rewind(arquivo);
+                    fgets(linha, sizeof(linha), arquivo); // pula o cabeçalho
+
+                    int encontrou = 0;
+                    char nome[50], turma[20], ra[20], materia[50];
+                    float n1, n2, n3, media;
+
+                    while (fgets(linha, sizeof(linha), arquivo))
+                    {
+                        sscanf(linha, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f",
+                               nome, turma, ra, materia, &n1, &n2, &n3, &media);
+
+                        if (strcmp(nomeAluno, nome) == 0)
+                        {
+                            printf("\n------------------------------\n");
+                            printf("Nome:    %s\n", nome);
+                            printf("Matéria: %s\n", materia);
+                            printf("Notas:   %.1f | %.1f | %.1f\n", n1, n2, n3);
+                            printf("Média:   %.1f\n", (n1 + n2 + n3) / 3);
+                            printf("------------------------------\n");
+                            encontrou = 1;
+                            break;
+                        }
+                    }
+
+                    if (!encontrou)
+                        printf("\nAluno nao encontrado para a materia %s.\n", nomeMateria);
+                }
+                else
+                {
+                    printf("Busca geral ainda não implementada.\n");
                 }
 
-                if (escolhaModuloCase1 != 1 && escolhaModuloCase1 != 2)
+                // Pergunta se deseja buscar outro aluno
+                do
                 {
-                    printf("Opção inválida! Escolha 1 ou 2.\n");
-                    continue;
-                }
-                // Sai do loop se for válido
-                break;
-            }
+                    printf("\nDeseja buscar outro aluno? [1] Sim [0] Nao: ");
+                    fgets(escolhaStr, sizeof(escolhaStr), stdin);
 
-            int escMateriaAluno;         // variavel para a escolha de qual materia voce deseja procurar o aluno
-            if (escolhaModuloCase1 == 1) // busca aluno por materia especifica
-            {
-                printf("qual materia deseja olhar o aluno?\n");
-                printf("1 Algoritmos_e_Estruturas_de_Dados_em_Python\n2 Analise_e_Projeto_de_Sistemas\n");
-                // scanf("%i", &escMateriaAluno);
-
-                int resultadoEscolhaMate;
-                while (1)
-                {
-                    // scanf("%i", &escMateriaAluno);
-                    resultadoEscolhaMate = scanf("%i", &escMateriaAluno);
-
-                    while (getchar() != '\n');
-
-                    if (resultadoEscolhaMate != 1)
+                    if (sscanf(escolhaStr, "%d", &buscarNovamente) != 1 || (buscarNovamente != 0 && buscarNovamente != 1))
                     {
-                        printf("Entrada inválida! Digite apenas números (1 ou 2).\n");
+                        printf("Entrada inválida! Digite apenas 0 ou 1.\n");
                         continue;
                     }
-                    if (escMateriaAluno != 1 && escMateriaAluno != 2)
-                    {
-                        printf("Entrada inválida! Digite apenas números (1 ou 2).\n");
-                        continue;
-                    }
+
                     break;
-                }
-                char nomeAlunoCase1[15];
-                char dadosMateriaBusca[100]; // variavel que será guardado os dados dos arquivos assim que a gente ler ele
-                char nomeMateriaCase1[20];   // variavel onde será guardado o nome da materia que a gente escolher aq em baixo
-                FILE *materiaEscolinhaBusca; // ponteiro que será usado para abrir os arquivos la de cima
-                if (escMateriaAluno == 1)
-                {
-                    materiaEscolinhaBusca = pim01;
-                    strcpy(nomeMateriaCase1, "Algoritmos_e_Estruturas_de_Dados_em_Python");
-                    printf("nome do aluno: ");
-                    fgets(nomeAlunoCase1, sizeof(nomeAlunoCase1), stdin);
-                }
-                if (escMateriaAluno == 2)
-                {
-                    strcpy(nomeMateriaCase1, "Analise_e_Projeto_de_Sistemas");
-                    materiaEscolinhaBusca = pim02;
-                }
-                if (escMateriaAluno == 3)
-                {
-                    strcpy(nomeMateriaCase1, "Engenharia_de_Software_Agil");
-                    materiaEscolinhaBusca = pim03;
-                }
-
-                fseek(materiaEscolinhaBusca, 0, SEEK_SET); // reinicia o arquivo toda vez que a gente querer olhar o relatorio
-                int encontrouCase1 = 0;
-                fgets(dadosMateriaBusca, sizeof(dadosMateriaBusca), materiaEscolinhaBusca);
-                while (fgets(dadosMateriaBusca, sizeof(dadosMateriaBusca), materiaEscolinhaBusca) != NULL)
-                {
-                    sscanf(dadosMateriaBusca, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, raAluno, materia, &n1, &n2, &n3, &nota);
-
-                    nomeAlunoCase1[strcspn(nomeAlunoCase1, "\n")] = '\0'; // essa função faz a limpeza da quebra de linha lida pelo o fgets, quando usamos o fgets ele le a \n no final do texto, por isso a validação no aluno aq de baixo nao estava pegando antes de usar esssa função para tirar o \n, o fget lia assim "nomeAluno\n" e guardava na variavel "nomeAlunoCase1", quando ia para a comparação aq de baixo, era sempre falsa pq a var "nomeAlunoCase1" esta guardando "nomeAluno\n" e a var "nome" guardava "nomeAluno" sem a quebra de linha
-                    if (strcmp(nomeAlunoCase1, nome) == 0)
-                    {
-                        printf("aluno encontrado %s\n", nomeAlunoCase1);
-                        encontrouCase1 = 1;
-                    }
-                }
-                if (encontrouCase1 == 0)
-                {
-                    while (getchar() != '\n');
-                    printf("nao encontrdo");
-                }
+                } while (1);
             }
-            else if (escolhaModuloCase1 == 2) // busca aluno em todas as materias
-            {
-                printf("escolha 2");
-            }
-
             break;
+        }
+
+        break;
         case 2:
             do
             {
@@ -231,7 +248,9 @@ int main()
                     strcpy(nomeMateria, "Engenharia_de_Software_Agil"); // função "strcopy" Copia a string do nome da matéria para a variável nomeMateria. ai podemos usar ela para exibir o nome do relatorio qnd ele for aberto
                 }
 
-                printf("\nRelatorio de %s:\n", nomeMateria);
+                printf("\n==============================================\n");
+                printf("           RELATORIO DE %s\n", nomeMateria);
+                printf("==============================================\n");
                 char linha[200], nome[50], turma[20], ra[20], materia[50];
                 float n1, n2, n3, nota;
 
@@ -241,10 +260,14 @@ int main()
                     linha[strcspn(linha, "\n")] = '\0';
                     sscanf(linha, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, ra, materia, &n1, &n2, &n3, &nota); // salva cada parte do arquivo em uma variavel, a cada ";" do csv, essa função guarda nas variaveis
 
-                    printf("\n------------------\n");
-                    printf("Nome: %s\nMateria: %s\nNotas: %.1f %.1f %.1f\nMedia: %.1f\n------------------\n",
-                           nome, materia, n1, n2, n3, (n1 + n2 + n3) / 3);
-
+                    printf("-------------------------------------------------------------\n");
+                    printf("   Nome:         %-40s\n", nome);
+                    printf("   Turma:        %-40s\n", turma);
+                    printf("   RA:           %-40s\n", ra);
+                    printf("   Matéria:      %-40s\n", materia);
+                    printf("   Notas:        %.1f | %.1f | %.1f\n", n1, n2, n3);
+                    printf("   Média Final:  %.1f\n", nota);
+                    printf("-------------------------------------------------------------\n");
                     contadorAlunos++; // faz o incremento da variavel para saber o total de alunos exibidos por arquivo
                     encontrou = 1;
                     // A variável "encontrou" funciona como uma flag, assim que eu encontro oq eu quero, ela muda para 1 e nao vai para a condição ali de baixo fora do while que esta lendoo arquivo.

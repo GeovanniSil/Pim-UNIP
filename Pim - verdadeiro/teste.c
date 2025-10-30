@@ -57,7 +57,7 @@ int main(){
     //int resultado;
     printf("Qual materia voce deseja visualizar as notas, 1 [Mate] 2 [Port] 3 [Quimica]\n");
     //resultado = 
-    scanf("%s", escolha);
+    //scanf("%s", escolha);
     while (strcmp(escolha, "1") != 0
         && strcmp(escolha, "mate") != 0
         && strcmp(escolha, "2") != 0
@@ -69,7 +69,7 @@ int main(){
     {
         while (getchar() != '\n');
         printf("Materia nao encontrada, tente novamente: ");
-        scanf("%s", escolha);
+        //scanf("%s", escolha);
     }
      
     
