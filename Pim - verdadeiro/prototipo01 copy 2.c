@@ -11,16 +11,16 @@ int main(){
         printf("erro");
     }
     
-    int escolha;
+    int escolha, n1, n2, n3, nota;
     int resultado;
     printf("Qual materia voce deseja visualizar as notas, 1 [Mate] 2 [Port] 3 [Quimica]\n");
-    resultado = scanf("%d", &escolha);
-    while (resultado != 1 && (escolha != 1 && escolha !=2 && escolha != 3)) //int resultado, resultado == scanf("%d", &escolha); e resultado != 1, serve para verificar se o usuario digitou alguma letra, se ele digitou, cai no loop e pede para ele digitar novamente
+    //resultado = scanf("%d", &escolha);
+    /*while (resultado != 1 && (escolha != 1 && escolha !=2 && escolha != 3)) //int resultado, resultado == scanf("%d", &escolha); e resultado != 1, serve para verificar se o usuario digitou alguma letra, se ele digitou, cai no loop e pede para ele digitar novamente
     {
         while (getchar() != '\n');
         printf("Materia nao encontrada, tente novamente: ");
         scanf(" %d", &escolha);
-    }
+    }*/
      
     char nome[40];/* 
     fscanf(pim01, "%s", nome);
@@ -32,7 +32,7 @@ int main(){
     char materia[20];
     //int encontrou = 0;
 
-    while (fgets(linha, sizeof(linha), pim01) != NULL)
+    /*while (fgets(linha, sizeof(linha), pim01) != NULL)
     {
       //  printf("%s", nome);
         linha[strcspn(linha, "\n")] = '\0';//serve para limpar o enter que fica, as vezes nao entrara na condição ali de baixo pelo fato de o arquivo estar indo com o \n, e a condição é "geovannisilva" porem, o fgets esta lendo "geovannisilva\n", a função serve para tirar esse \n do texto
@@ -46,7 +46,29 @@ int main(){
             printf("Nota: %s\n", f);
             printf("------------------\n");
         }
-    }
+    }*/
+char nomeAluno[10], turma[40];
+    rewind(pim01);
+                    char arq01[100], ra[10];//variavel para os dados do arquivo pimm1
+                    int media;
+                    printf("implementando o busca geral\n");
+                    printf("digite o nome do aluno: ");
+                    fgets(nomeAluno, sizeof(nomeAluno), stdin);//pega o nome do aluno
+                    nomeAluno[strcspn(nomeAluno, "\n")] = '\0';//tira o \n do final do nome
+
+                    fgets(arq01, sizeof(arq01), pim01);//pula cabeçalho
+
+                    while (fgets(arq01, sizeof(arq01), pim01) != NULL)
+                    {
+                        sscanf(arq01, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, ra, materia, &n1, &n2, &n3, &nota);
+
+                               if (strcmp(nomeAluno, nome) == 0)
+                               {
+                                    printf("certo");
+                               }else   
+                                printf("erro");
+                               
+                    }
     
     fclose(pim01);
     return 0;
