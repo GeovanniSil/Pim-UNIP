@@ -1,45 +1,47 @@
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
+#include <stdio.h>  //funções de entrada e saída
+#include <string.h> //manipulação de strings (strcmp, strcpy, etc.);
+#include <ctype.h>  //funções de caracteres (como toupper, tolower).
 #include <stdlib.h> // precisa pra usar atoi()
-#include <locale.h>
-
-/*void buscaAlunoGeral(){
-
-}*/
+#include <locale.h> //permite usar acentuação em português (setlocale);
 
 void exibirMenuPrincipal()
 {
-    printf("\n\x1b[1;34m===========================================\n");
+    printf("\n\x1b[1;37m===========================================\n");
     printf("         RELATÓRIO DE NOTAS - UNIP\n");
-    printf("===========================================\x1b[0m\n");
-    printf("\x1b[1;36mSelecione uma opção:\x1b[0m\n");
-    printf("  \x1b[33m[1]\x1b[0m Buscar por aluno\n");
-    printf("  \x1b[33m[2]\x1b[0m Buscar por matéria\n");
-    printf("  \x1b[33m[0]\x1b[0m Sair\n");
+    printf("===========================================\n");
+    printf("Selecione uma opção:\x1b[0m\n");
+    printf("\x1b[36m  [1] Buscar por aluno\n");
+    printf("  [2] Buscar por matéria\n");
+    printf("  [0] Sair\x1b[0m\n");
 }
+
+
+
+void exibaAluno(char *nome, char *turma, char *ra, char *materia,
+                float n1, float n2, float n3, float nota);
 
 int main()
 { // abertura dos arquivos
+    
     setlocale(LC_ALL, "Portuguese_Brazil");
     FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Algoritmos_e_Estruturas_de_Dados_em_Python.csv", "r");
     FILE *pim02 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Analise_e_Projeto_de_Sistemas.csv", "r");
     FILE *pim03 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Engenharia_de_Software_Agil.csv", "r");
     if (pim01 == NULL)
     {
-        printf("Erro ao abrir o arquivo Algoritmos_e_Estruturas_de_Dados_em_Python\n");
+        printf("\x1b[31mErro ao abrir o arquivo Algoritmos_e_Estruturas_de_Dados_em_Python\x1b[0m\n");
         return 1;
     }
 
     if (pim02 == NULL)
     {
-        printf("Erro ao abrir o arquivo Analise_e_Projeto_de_Sistemas\n");
+        printf("\x1b[31mErro ao abrir o arquivo Analise_e_Projeto_de_Sistemas\x1b[0m\n");
         return 1;
     }
 
     if (pim03 == NULL)
     {
-        printf("Erro ao abrir o arquivo Engenharia_de_Software_Agil.csv\n");
+        printf("\x1b[31mErro ao abrir o arquivo Engenharia_de_Software_Agil.csv\x1b[0m\n");
         return 1;
     }
     // printf("\033[1;32mTexto verde!\033[0m\n");
@@ -52,17 +54,10 @@ int main()
     {
         int opcao;
         char entrada[10];
-        exibirMenuPrincipal();
-        /* printf("\n\x1b[1;34m===========================================\n");
-        printf("         RELATÓRIO DE NOTAS - UNIP\n");
-        printf("===========================================\x1b[0m\n");
-        printf("\x1b[1;36mSelecione uma opção:\x1b[0m\n");
-        printf("  \x1b[33m[1]\x1b[0m Buscar por aluno\n");
-        printf("  \x1b[33m[2]\x1b[0m Buscar por matéria\n");
-        printf("  \x1b[33m[0]\x1b[0m Sair\n"); */
+        exibirMenuPrincipal(); // função para mostrar o menu principal
         do
         {
-            printf("Digite sua escolha: ");
+            printf("\x1b[1;33mDigite sua escolha: \x1b[0m");
             fgets(entrada, sizeof(entrada), stdin);
 
             // sscanf retorna 1 se conseguiu ler um número inteiro corretamente
@@ -92,10 +87,11 @@ int main()
                 // Escolha do tipo de busca
                 do
                 {
-                    printf("\n\x1b[1;36mDeseja buscar por todas as matérias ou somente uma?\x1b[0m\n");
-                    printf("[1] Materia especifica\n");
+                    printf("\x1b[1;37mDeseja buscar por todas as matérias ou somente uma?\x1b[0m\n");
+                    printf("\x1b[36m[1] Materia especifica\n");
                     printf("[2] Geral\n");
-                    printf("[0] Sair\n");
+                    printf("[0] Sair\x1b[0m\n");
+                    printf("\x1b[1;33mDigite sua escolha: \x1b[0m");
                     fgets(escolhaStr, sizeof(escolhaStr), stdin);
 
                     // sscanf retorna 1 se conseguiu ler um número inteiro corretamente
@@ -115,10 +111,11 @@ int main()
                     // Escolha da matéria
                     do
                     {
-                        printf("\nEscolha a materia:\n");
-                        printf("[1] Algoritmos_e_Estruturas_de_Dados_em_Python\n");
+                        printf("\x1b[1;37mEscolha a materia:\x1b[0m\n");
+                        printf("\x1b[36m[1] Algoritmos_e_Estruturas_de_Dados_em_Python\n");
                         printf("[2] Analise_e_Projeto_de_Sistemas\n");
-                        printf("[3] Engenharia_de_Software_Agil\n");
+                        printf("[3] Engenharia_de_Software_Agil\x1b[0m\n");
+                        printf("\x1b[1;33mDigite sua escolha: \x1b[0m");
                         fgets(escolhaStr, sizeof(escolhaStr), stdin);
 
                         if (sscanf(escolhaStr, "%d", &materiaEscolhida) != 1 || materiaEscolhida < 1 || materiaEscolhida > 3)
@@ -152,7 +149,7 @@ int main()
                         strcpy(nomeMateria, "Engenharia_de_Software_Agil");
 
                     // Nome do aluno
-                    printf("\nDigite o nome do aluno: ");
+                    printf("\x1b[1;37mDigite o nome do aluno: \x1b[0m");
                     fgets(nomeAluno, sizeof(nomeAluno), stdin);
                     nomeAluno[strcspn(nomeAluno, "\n")] = 0;
 
@@ -170,27 +167,22 @@ int main()
 
                         if (strcmp(nomeAluno, nome) == 0)
                         {
-                            printf("\n\x1b[32m--------------------------------------\n");
-                            printf("Nome:    %s\n", nome);
-                            printf("Matéria: %s\n", materia);
-                            printf("Notas:   %.1f | %.1f | %.1f\n", n1, n2, n3);
-                            printf("Média:   %.1f\n", (n1 + n2 + n3) / 3);
-                            printf("--------------------------------------\x1b[0m\n");
+                            exibaAluno(nome, turma, ra, materia, n1, n2, n3, media);
                             encontrou = 1;
                             break;
                         }
                     }
 
                     if (!encontrou)
-                        printf("\nAluno nao encontrado para a materia %s.\n", nomeMateria);
+                        printf("\x1b[31mluno nao encontrado para a materia %s.\x1b[0m\n", nomeMateria);
                 }
                 if (tipoBusca == 2)
                 {
-                    printf("\nDigite o nome do aluno: ");
+                    printf("\x1b[1;37mDigite o nome do aluno: \x1b[0m");
                     fgets(nomeAluno, sizeof(nomeAluno), stdin);
                     nomeAluno[strcspn(nomeAluno, "\n")] = 0;
 
-                    rewind(pim01); // reinia o arquivo para a proxima leitura
+                    rewind(pim01); // reinicia o arquivo para a proxima leitura
 
                     char nome[50], turma[20], ra[20], materia[50];
                     float n1, n2, n3, media;
@@ -203,14 +195,8 @@ int main()
 
                         if (strcmp(nomeAluno, nome) == 0)
                         {
-                            printf("\n\x1b[32m--------------------------------------\n");
-                            printf("Nome:    %s\n", nome);
-                            printf("Matéria: %s\n", materia);
-                            printf("Notas:   %.1f | %.1f | %.1f\n", n1, n2, n3);
-                            printf("Média:   %.1f\n", (n1 + n2 + n3) / 3);
-                            printf("--------------------------------------\x1b[0m\n");
+                            exibaAluno(nome, turma, ra, materia, n1, n2, n3, media);//função exibir o para aluno quando ele for encontrado nos arquivos
                             encontrou = 1;
-                            // break;
                         }
                     }
 
@@ -222,12 +208,7 @@ int main()
                                nome, turma, ra, materia, &n1, &n2, &n3, &media);
                         if (strcmp(nomeAluno, nome) == 0)
                         {
-                            printf("\n\x1b[32m--------------------------------------\n");
-                            printf("Nome:    %s\n", nome);
-                            printf("Matéria: %s\n", materia);
-                            printf("Notas:   %.1f | %.1f | %.1f\n", n1, n2, n3);
-                            printf("Média:   %.1f\n", (n1 + n2 + n3) / 3);
-                            printf("--------------------------------------\x1b[0m\n");
+                            exibaAluno(nome, turma, ra, materia, n1, n2, n3, media);//função exibir o para aluno quando ele for encontrado nos arquivos
                             encontrou = 1;
                         }
                     }
@@ -240,12 +221,7 @@ int main()
                                nome, turma, ra, materia, &n1, &n2, &n3, &media);
                         if (strcmp(nomeAluno, nome) == 0)
                         {
-                            printf("\n\x1b[32m--------------------------------------\n");
-                            printf("Nome:    %s\n", nome);
-                            printf("Matéria: %s\n", materia);
-                            printf("Notas:   %.1f | %.1f | %.1f\n", n1, n2, n3);
-                            printf("Média:   %.1f\n", (n1 + n2 + n3) / 3);
-                            printf("--------------------------------------\x1b[0m\n");
+                            exibaAluno(nome, turma, ra, materia, n1, n2, n3, media);//função exibir o para aluno quando ele for encontrado nos arquivos
                             encontrou = 1;
                         }
                     }
@@ -253,19 +229,19 @@ int main()
 
                 if (tipoBusca == 0)
                 {
-                    printf("saindo");
+                    printf("\x1b[91msaindo\x1b[0m");
                     break;
                 }
 
                 // Pergunta se deseja buscar outro aluno
                 do
                 {
-                    printf("\nDeseja buscar outro aluno? [1] Sim [0] Nao: ");
+                    printf("\x1b[1;33mDeseja buscar outro aluno? [1] Sim [0] Nao: \x1b[0m");
                     fgets(escolhaStr, sizeof(escolhaStr), stdin);
 
                     if (sscanf(escolhaStr, "%d", &buscarNovamente) != 1 || (buscarNovamente != 0 && buscarNovamente != 1))
                     {
-                        printf("Entrada inválida! Digite apenas 0 ou 1.\n");
+                        printf("\x1b[1;31mEntrada inválida! Digite apenas 0 ou 1.\x1b[0m\n");
                         continue;
                     }
 
@@ -285,16 +261,16 @@ int main()
                 encontrou = 0;
                 int contadorAlunos = 0; // variavel para contar os alunos dos arquivos, ela será incremetanda a cada vez que o while repetir na hora de mostrar o relatorio
 
-                printf("\nEscolha uma materia:\n");
-                printf("  [1] Algoritmos_e_Estruturas_de_Dados_em_Python\n");
+                printf("\x1b[1;33mEscolha uma materia:\x1b[0m\n");
+                printf("\x1b[36m  [1] Algoritmos_e_Estruturas_de_Dados_em_Python\n");
                 printf("  [2] Analise_e_Projeto_de_Sistemas\n");
-                printf("  [3] Engenharia_de_Software_Agil\n");
+                printf("  [3] Engenharia_de_Software_Agil \x1b[0m\n");
 
                 int escolhaInt;
                 char entrada[10];
                 do
                 { // função para fazer a validação da entrada do usuario
-                    printf("Digite a materia da sua escolha: ");
+                    printf("\x1b[1;33mDigite a materia da sua escolha: \x1b[0m");
                     fgets(entrada, sizeof(entrada), stdin);
                     escolhaInt = atoi(entrada);
 
@@ -324,9 +300,9 @@ int main()
                     strcpy(nomeMateria, "Engenharia de Software Agil"); // função "strcopy" Copia a string do nome da matéria para a variável nomeMateria. ai podemos usar ela para exibir o nome do relatorio qnd ele for aberto
                 }
 
-                printf("\n==============================================\n");
-                printf("           RELATORIO DE %s\n", nomeMateria);
-                printf("\n==============================================\n");
+                printf("\x1b[1;37m==============================================\n");
+                printf("           Relatorio de %s\n", nomeMateria);
+                printf("==============================================\x1b[0m\n");
                 char linha[200], nome[50], turma[20], ra[20], materia[50];
                 float n1, n2, n3, nota;
 
@@ -336,14 +312,7 @@ int main()
                     linha[strcspn(linha, "\n")] = '\0';
                     sscanf(linha, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, ra, materia, &n1, &n2, &n3, &nota); // salva cada parte do arquivo em uma variavel, a cada ";" do csv, essa função guarda nas variaveis
 
-                    printf("-------------------------------------------------------------\n");
-                    printf("   Nome:         %-40s\n", nome);
-                    printf("   Turma:        %-40s\n", turma);
-                    printf("   RA:           %-40s\n", ra);
-                    printf("   Matéria:      %-40s\n", materia);
-                    printf("   Notas:        %.1f | %.1f | %.1f\n", n1, n2, n3);
-                    printf("   Média Final:  %.1f\n", nota);
-                    printf("-------------------------------------------------------------\n");
+                    exibaAluno(nome, turma, ra, materia, n1, n2, n3, nota);
                     contadorAlunos++; // faz o incremento da variavel para saber o total de alunos exibidos por arquivo
                     encontrou = 1;
                     // A variável "encontrou" funciona como uma flag, assim que eu encontro oq eu quero, ela muda para 1 e nao vai para a condição ali de baixo fora do while que esta lendoo arquivo.
@@ -352,17 +321,17 @@ int main()
 
                 if (encontrou == 0) // caso eu nao encontrar nenhum aluno no arquivo, a variavel nao vai mudar (pq ela esta iniciada com 0) e vai entrar nessa condição, que será verdadeira
                     printf("Nenhum aluno encontrado para esta materia.\n");
-                printf("Total de alunos encontrados: %i\n", contadorAlunos);
+                printf("\x1b[1;33mTotal de alunos encontrados: %i\n\x1b[0m", contadorAlunos);
 
                 // Perguntar se deseja buscar outra matéria
                 do
                 {
-                    printf("Deseja buscar outra materia? [1] Sim [0] Nao: ");
+                    printf("\x1b[1;37mDeseja buscar outra materia? [1] Sim [0] Nao: \x1b[0m");
                     fgets(entrada, sizeof(entrada), stdin);
                     novamente = atoi(entrada);
                     if (sscanf(entrada, "%d", &opcao) != 1 || opcao < 0 || opcao > 2)
                     {
-                        printf("Entrada inválida! Digite apenas 0, 1 ou 2.\n");
+                        printf("\x1b[1;31mEntrada inválida! Digite apenas 0 ou 1.\x1b[0m\n");
                         continue;
                     }
                     break;
@@ -374,7 +343,7 @@ int main()
         case 0:
             dnv = 0; // se no menu eu escolher 0, a sistema sair do programa pq a variavel "dnv" estara com o valor de 0, logo ela na cai na condição do primeiro do while, como visto ali em baixo
             // caso queira testar, mude essa variavel "dnv = 0" para "dnv = 1" o loop vai continuar pq a condição ali de baixo retornou true, logo, o loop se repete
-            printf("Saindo do sistema...\n");
+            printf("\x1b[91mSaindo do sistema...\x1b[0m\n");
             break;
 
             // default:
@@ -388,4 +357,18 @@ int main()
     fclose(pim03);
     return 0;
     system("pause");
+    system("color E0");
+}
+
+void exibaAluno(char *nome, char *turma, char *ra, char *materia, 
+                float n1, float n2, float n3, float nota) //função exibir o para aluno quando ele for encontrado nos arquivos
+{
+    printf("-------------------------------------------------------------\n");
+    printf("\x1b[1;32m   Nome:         %-40s\n", nome);
+    printf("   Turma:        %-40s\n", turma);
+    printf("   RA:           %-40s\n", ra);
+    printf("   Matéria:      %-40s\n", materia);
+    printf("   Notas:        %.1f | %.1f | %.1f\n", n1, n2, n3);
+    printf("   Média Final:  %.1f\x1b[0m\n", nota);
+    printf("-------------------------------------------------------------\n");
 }

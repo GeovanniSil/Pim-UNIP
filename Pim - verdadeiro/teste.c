@@ -35,6 +35,8 @@ int main(){
 #include <string.h>
 
 int main(){
+        system("color 8D");
+
     FILE * pim01;
     pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\pim01.txt", "r");//coloque o caminho onde esta salvo o seu arquivo txt e salve nele dados parecidos com esse abaixo
         /* Geovanni;4.0;5.0;8;matematica
@@ -55,7 +57,7 @@ int main(){
     
     char escolha[15];
     //int resultado;
-    printf("Qual materia voce deseja visualizar as notas, 1 [Mate] 2 [Port] 3 [Quimica]\n");
+    printf("\x1b[1;36mQual materia voce deseja visualizar as notas, 1 [Mate] 2 [Port] 3 [Quimica]\x1b[0m\n");
     //resultado = 
     //scanf("%s", escolha);
     while (strcmp(escolha, "1") != 0

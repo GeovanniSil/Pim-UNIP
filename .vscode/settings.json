@@ -1,6 +1,9 @@
 {
     "C_Cpp.errorSquiggles": "disabled",
 
-    "editor.guides.bracketPairs": "active"
+    "editor.guides.bracketPairs": "active",
+    "files.associations": {
+        "stdio.h": "c"
+    }
    
 }
