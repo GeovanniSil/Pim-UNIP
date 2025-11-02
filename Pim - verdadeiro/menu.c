@@ -4,18 +4,19 @@
 #include <stdlib.h> // precisa pra usar atoi()
 #include <locale.h> //permite usar acentuação em português (setlocale);
 
-void converterMinusculas(char *str) {
-    for (int i = 0; str[i]; i++) {
+void converterMinusculas(char *str)
+{
+    for (int i = 0; str[i]; i++)
+    {
         str[i] = tolower(str[i]);
     }
 }
 
-
 void exibirMenuPrincipal();                                                                                  // menu inicial
 void exibaAluno(char *nome, char *turma, char *ra, char *materia, float n1, float n2, float n3, float nota); // função para printar o relatorio dos alunos
 int nomeValido(char *nome);                                                                                  // função para validar a entrada do nome do aluno e que nao deixar passar numeros
-int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, char *nomeAluno);                              // função que percorre os 3 arquivos para usar no busca por alunos geral
-//Chame a função buscarNosArquivos(), e guarde o valor que ela devolve dentro da variável encontrouIf2.”Chame a função buscarNosArquivos(), e guarde o valor que ela devolve dentro da variável encontrouTipoBusca. O retorno que a função "buscarNosArquivos" será guardada dentro dessa variavel "encontrouTipoBusca" e a gente vai usar ela no busca geral de aluno, para saber se foi encontrado aluno ou nao, se nao foi, essa variavel será usada para mostrar que noa tem o aluno que o usuario digitou nos relatorios
+int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, FILE *pim04, char *nomeAluno);                               // função que percorre os 3 arquivos para usar no busca por alunos geral
+// Chame a função buscarNosArquivos(), e guarde o valor que ela devolve dentro da variável encontrouIf2.”Chame a função buscarNosArquivos(), e guarde o valor que ela devolve dentro da variável encontrouTipoBusca. O retorno que a função "buscarNosArquivos" será guardada dentro dessa variavel "encontrouTipoBusca" e a gente vai usar ela no busca geral de aluno, para saber se foi encontrado aluno ou nao, se nao foi, essa variavel será usada para mostrar que noa tem o aluno que o usuario digitou nos relatorios
 void cores(int nota1);
 int main()
 { // abertura dos arquivos
@@ -25,8 +26,8 @@ int main()
     FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Algoritmos_e_Estruturas_de_Dados_em_Python.csv", "r"); // caminho onde vc salvou o seu arquivo txt
     FILE *pim02 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Analise_e_Projeto_de_Sistemas.csv", "r");
     FILE *pim03 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Engenharia_de_Software_Agil.csv", "r");
-    FILE *pim04 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Programação_Estruturada_em_C.csv", "r");
-    
+    FILE *pim04 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Programacao_Estruturada_em_C.csv", "r");
+
     if (pim01 == NULL)
     {
         printf("\x1b[31mErro ao abrir o arquivo Algoritmos_e_Estruturas_de_Dados_em_Python\x1b[0m\n");
@@ -54,7 +55,7 @@ int main()
     int dnv = 1; // dps anotar sobre essa variavel e sua funcionalidade
     do
     {
-        system("cls");         // limpa o terminal a cada vez que voltar para o menu novamente
+        system("cls"); // limpa o terminal a cada vez que voltar para o menu novamente
         int opcao;
         char entrada[10];
         exibirMenuPrincipal(); // função para mostrar o menu principal
@@ -116,8 +117,8 @@ int main()
                         printf("\x1b[1;37m\nEscolha a materia:\x1b[0m\n");
                         printf("\x1b[36m[1] - Algoritmo e Estrutura de Dados em Python\n");
                         printf("[2] - Analise e Projeto de sistemas\n");
-                        printf("[3] - Engenharia de Software Agil\x1b[0m\n");
-                        printf("[4] - Programação_Estruturada_em_C\x1b[0m\n");
+                        printf("[3] - Engenharia de Software Agil\n");
+                        printf("[4] - Programação Estruturada em C\x1b[0m\n");
                         printf("\x1b[1;90m[0] - Sair\x1b[0m\n");
                         printf("\x1b[1;33mDigite sua escolha: \x1b[0m");
                         fgets(escolhaStr, sizeof(escolhaStr), stdin);
@@ -139,6 +140,8 @@ int main()
                         arquivo = pim02;
                     else if (materiaEscolhida == 3)
                         arquivo = pim03;
+                    else if (materiaEscolhida == 4)
+                        arquivo = pim04;
 
                     if (materiaEscolhida == 0)
                     {
@@ -151,15 +154,17 @@ int main()
                         strcpy(nomeMateria, "Algoritmos e Estruturas de Dados em Python");
                     else if (materiaEscolhida == 2)
                         strcpy(nomeMateria, "Analise e Projeto de Sistemas");
-                    else
+                    else if (materiaEscolhida == 3)
                         strcpy(nomeMateria, "Engenharia de Software Agil");
+                    else
+                        strcpy(nomeMateria, "Programação Estruturada em C");
 
                     do
                     {
                         printf("\x1b[1;37m\nDigite o nome do aluno: \x1b[0m");
                         fgets(nomeAluno, sizeof(nomeAluno), stdin);
                         nomeAluno[strcspn(nomeAluno, "\n")] = 0;
-                        //converterMinusculas(nomeAluno);
+                        // converterMinusculas(nomeAluno);
                         if (!nomeValido(nomeAluno))
                         {
                             printf("\x1b[31mNome inválido! Use apenas letras .\x1b[0m\n");
@@ -213,9 +218,10 @@ int main()
                     fgets(linha, sizeof(linha), pim01); // pula o cabeçalho
                     fgets(linha, sizeof(linha), pim02); // pula o cabeçalho
                     fgets(linha, sizeof(linha), pim03); // pula o cabeçalho
+                    fgets(linha, sizeof(linha), pim04); // pula o cabeçalho
 
-                    //buscarNosArquivos(pim01, pim02, pim03, nomeAluno); // função que abre todos os arquivos e faz a exibição do aluno que a gente quer olhar
-                    encontrouTipoBusca = buscarNosArquivos(pim01, pim02, pim03, nomeAluno);//o dado de retorn na função "buscarNosArquivos" é guardado dentro da variavel "encontrouTipoBusca", ent, se encontrou um aluno ela mudará a variavel para , se nao encontrou um aluno, a variavel ficara com o valor de 0 e vai aparecer a mensagem "Aluno nao encontrado nos relatorios!!"
+                    // buscarNosArquivos(pim01, pim02, pim03, nomeAluno); // função que abre todos os arquivos e faz a exibição do aluno que a gente quer olhar
+                    encontrouTipoBusca = buscarNosArquivos(pim01, pim02, pim03, pim04, nomeAluno); // o dado de retorn na função "buscarNosArquivos" é guardado dentro da variavel "encontrouTipoBusca", ent, se encontrou um aluno ela mudará a variavel para , se nao encontrou um aluno, a variavel ficara com o valor de 0 e vai aparecer a mensagem "Aluno nao encontrado nos relatorios!!"
                 }
                 if (tipoBusca == 2 && !encontrouTipoBusca)
                 {
@@ -224,7 +230,7 @@ int main()
 
                 if (tipoBusca == 0)
                 {
-                    //printf("\x1b[91msaindo\x1b[0m");
+                    // printf("\x1b[91msaindo\x1b[0m");
                     break;
                 }
 
@@ -252,6 +258,7 @@ int main()
                 fseek(pim01, 0, SEEK_SET); // reinicia o arquivo toda vez que a gente querer olhar o relatorio
                 fseek(pim02, 0, SEEK_SET); // reinicia o arquivo toda vez que a gente querer olhar o relatorio
                 fseek(pim03, 0, SEEK_SET); // reinicia o arquivo toda vez que a gente querer olhar o relatorio
+                fseek(pim04, 0, SEEK_SET); // reinicia o arquivo toda vez que a gente querer olhar o relatorio
                 encontrou = 0;
                 int contadorAlunos = 0; // variavel para contar os alunos dos arquivos, ela será incremetanda a cada vez que o while repetir na hora de mostrar o relatorio
 
@@ -259,6 +266,7 @@ int main()
                 printf("\x1b[36m[1] - Algoritmos e Estruturas de Dados em Python\n");
                 printf("[2] - Analise e Projeto de Sistemas\n");
                 printf("[3] - Engenharia de Software Agil \n");
+                printf("[4] - Programação Estruturada em C \n");
                 printf("\x1b[1;90m[0] - Sair \x1b[0m\n");
 
                 int escolhaInt;
@@ -269,11 +277,11 @@ int main()
                     fgets(entrada, sizeof(entrada), stdin);
                     escolhaInt = atoi(entrada);
 
-                    if (escolhaInt < 0 || escolhaInt > 3)
+                    if (escolhaInt < 0 || escolhaInt > 4)
                     {
                         printf("\x1b[1;31mEntrada inválida! Tente novamente.\x1b[0m\n");
                     }
-                } while (escolhaInt < 0 || escolhaInt > 3);
+                } while (escolhaInt < 0 || escolhaInt > 4);
 
                 // Determina qual arquivo e nome da materia
                 FILE *arquivoEscolhido; // esse ponteiro aponta para os primeiros arquivos que abrimos no inicio do codigo
@@ -281,7 +289,7 @@ int main()
 
                 if (escolhaInt == 1)
                 {
-                    arquivoEscolhido = pim01;                                       // Determina qual arquivo será aberto
+                    arquivoEscolhido = pim01;                                        // Determina qual arquivo será aberto
                     strcpy(nomeMateria, "Algorit. e Estruturas de Dados em Python"); // função "strcopy" Copia a string do nome da matéria para a variável nomeMateria.ai podemos usar ela para exibir o nome do relatorio qnd ele for aberto
                 }
                 else if (escolhaInt == 2)
@@ -294,10 +302,15 @@ int main()
                     arquivoEscolhido = pim03;                           // Determina qual arquivo será aberto
                     strcpy(nomeMateria, "Engenharia de Software Agil"); // função "strcopy" Copia a string do nome da matéria para a variável nomeMateria. ai podemos usar ela para exibir o nome do relatorio qnd ele for aberto
                 }
+                else if (escolhaInt == 4)
+                {
+                    arquivoEscolhido = pim04;                            // Determina qual arquivo será aberto
+                    strcpy(nomeMateria, "Programação Estruturada em C"); // função "strcopy" Copia a string do nome da matéria para a variável nomeMateria. ai podemos usar ela para exibir o nome do relatorio qnd ele for aberto
+                }
                 else
                 {
-                    //printf("Saindo");
-                    break;// break dento de das chaves para pq o relatorio nao é exibido qnd escolhemos, se deixar sem as chaves, o relatorio nao é exibido e o sistema sai desse modulo
+                    // printf("Saindo");
+                    break; // break dento de das chaves para pq o relatorio nao é exibido qnd escolhemos, se deixar sem as chaves, o relatorio nao é exibido e o sistema sai desse modulo
                 }
                 printf("\n\x1b[1;37m===================================================\n");
                 printf("Relatorio de %s\n", nomeMateria);
@@ -357,6 +370,7 @@ int main()
     fclose(pim01);
     fclose(pim02);
     fclose(pim03);
+    fclose(pim04);
     return 0;
     system("pause");
 }
@@ -396,7 +410,7 @@ int nomeValido(char *nome)
     }
     return 1; // nome válido
 }
-int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, char *nomeAluno)
+int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, FILE *pim04, char *nomeAluno)
 {
     char linha[100], nome[50], turma[20], ra[20], materia[50];
     float n1, n2, n3, media;
@@ -437,8 +451,18 @@ int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, char *nomeAluno)
             encontrou = 1;
         }
     }
+    rewind(pim04);
+    while (fgets(linha, sizeof(linha), pim04))
+    {
+        sscanf(linha, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, ra, materia, &n1, &n2, &n3, &media);
+        if (strcmp(nomeAluno, nome) == 0)
+        {
+            exibaAluno(nome, turma, ra, materia, n1, n2, n3, media);
+            encontrou = 1;
+        }
+    }
 
-   return encontrou;
+    return encontrou;
 }
 void cores(int nota1)
 {
