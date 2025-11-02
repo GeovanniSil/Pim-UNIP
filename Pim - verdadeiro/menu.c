@@ -4,18 +4,10 @@
 #include <stdlib.h> // precisa pra usar atoi()
 #include <locale.h> //permite usar acentuação em português (setlocale);
 
-void converterMinusculas(char *str)
-{
-    for (int i = 0; str[i]; i++)
-    {
-        str[i] = tolower(str[i]);
-    }
-}
-
-void exibirMenuPrincipal();                                                                                  // menu inicial
+void exibirMenuPrincipal();// menu inicial
 void exibaAluno(char *nome, char *turma, char *ra, char *materia, float n1, float n2, float n3, float nota); // função para printar o relatorio dos alunos
-int nomeValido(char *nome);                                                                                  // função para validar a entrada do nome do aluno e que nao deixar passar numeros
-int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, FILE *pim04, char *nomeAluno);                               // função que percorre os 3 arquivos para usar no busca por alunos geral
+int nomeValido(char *nome);// função para validar a entrada do nome do aluno e que nao deixar passar numeros
+int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, FILE *pim04, char *nomeAluno); // função que percorre os 3 arquivos para usar no busca por alunos geral
 // Chame a função buscarNosArquivos(), e guarde o valor que ela devolve dentro da variável encontrouIf2.”Chame a função buscarNosArquivos(), e guarde o valor que ela devolve dentro da variável encontrouTipoBusca. O retorno que a função "buscarNosArquivos" será guardada dentro dessa variavel "encontrouTipoBusca" e a gente vai usar ela no busca geral de aluno, para saber se foi encontrado aluno ou nao, se nao foi, essa variavel será usada para mostrar que noa tem o aluno que o usuario digitou nos relatorios
 void cores(int nota1);
 int main()
@@ -382,7 +374,7 @@ void exibirMenuPrincipal()
     printf("===========================================\n");
     printf("\n--- Selecione uma opção ---\x1b[0m\n");
     printf("\x1b[36m[1] - Buscar por aluno\n");
-    printf("[2] - Buscar por matéria\n");
+    printf("[2] - Busca por matéria\n");
     printf("\x1b[1;90m[0] - Sair\x1b[0m\n");
 }
 
@@ -476,6 +468,5 @@ void cores(int nota1)
         printf("\x1b[32m");
     }
     else
-
         printf("\x1b[91m");
 }

@@ -40,8 +40,8 @@ class Aluno:
         if len(self.notas) != NUMERO_NOTAS_FIXO:
             self.media_semestral = 0.0
             if len(self.notas) > 0:
-                   # Mensagem de alerta se as notas estiverem incompletas (Vermelho)
-                   print(f"{COR_ERRO}Alerta: O cálculo da média requer exatamente {NUMERO_NOTAS_FIXO} notas. Média Semestral definida como 0.0.{COR_RESET}")
+                # Mensagem de alerta se as notas estiverem incompletas (Vermelho)
+                print(f"{COR_ERRO}Alerta: O cálculo da média requer exatamente {NUMERO_NOTAS_FIXO} notas. Média Semestral definida como 0.0.{COR_RESET}")
             return self.media_semestral
 
         # Realiza o cálculo da Média Semestral
@@ -72,7 +72,7 @@ def carregar_disciplinas():
         '1': "Algoritmos e Estruturas de Dados em Python",
         '2': "Analise e Projeto de Sistemas",
         '3': "Engenharia de Software Agil",
-        '4': "Programação Estruturada em C"
+        '4': "Programacao Estruturada em C"
     }
 
 def selecionar_disciplina_para_aluno():
@@ -273,7 +273,7 @@ def main():
     print(f"\n{COR_TITULO}==============================================")
     print("       SISTEMA ACADÊMICO - INÍCIO")
     print("==============================================" + COR_RESET)
-     
+    
     # Loop principal do menu
     while True:
         print(f"\n{COR_TITULO}--- MENU PRINCIPAL ---{COR_RESET}") # Título em Branco
