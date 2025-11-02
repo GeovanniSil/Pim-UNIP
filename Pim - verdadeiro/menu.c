@@ -25,6 +25,8 @@ int main()
     FILE *pim01 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Algoritmos_e_Estruturas_de_Dados_em_Python.csv", "r"); // caminho onde vc salvou o seu arquivo txt
     FILE *pim02 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Analise_e_Projeto_de_Sistemas.csv", "r");
     FILE *pim03 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Engenharia_de_Software_Agil.csv", "r");
+    FILE *pim04 = fopen("C:\\Users\\adilsondias\\OneDrive\\Desktop\\Pim\\Pim-UNIP\\Programação_Estruturada_em_C.csv", "r");
+    
     if (pim01 == NULL)
     {
         printf("\x1b[31mErro ao abrir o arquivo Algoritmos_e_Estruturas_de_Dados_em_Python\x1b[0m\n");
@@ -40,6 +42,12 @@ int main()
     if (pim03 == NULL)
     {
         printf("\x1b[31mErro ao abrir o arquivo Engenharia_de_Software_Agil.csv\x1b[0m\n");
+        return 1;
+    }
+
+    if (pim04 == NULL)
+    {
+        printf("\x1b[31mErro ao abrir o arquivo Programação_Estruturada_em_C\x1b[0m\n");
         return 1;
     }
 
@@ -83,9 +91,9 @@ int main()
                 do
                 {
                     printf("\x1b[1;37m\nDeseja buscar por todas as matérias ou somente uma?\x1b[0m\n");
-                    printf("\x1b[36m[1] Materia especifica\n");
-                    printf("[2] Geral\n");
-                    printf("[0] Sair\x1b[0m\n");
+                    printf("\x1b[36m[1] - Materia especifica\n");
+                    printf("[2] - Geral\n");
+                    printf("\x1b[1;90m[0] - Sair\x1b[0m\n");
                     printf("\x1b[1;33mDigite sua escolha: \x1b[0m");
                     fgets(escolhaStr, sizeof(escolhaStr), stdin);
 
@@ -106,14 +114,15 @@ int main()
                     do
                     { // Escolha da matéria
                         printf("\x1b[1;37m\nEscolha a materia:\x1b[0m\n");
-                        printf("\x1b[36m[1] - Algoritmo e Estrutura de_Dado e Python\n");
+                        printf("\x1b[36m[1] - Algoritmo e Estrutura de Dados em Python\n");
                         printf("[2] - Analise e Projeto de sistemas\n");
                         printf("[3] - Engenharia de Software Agil\x1b[0m\n");
-                        printf("[0] - Sair\x1b[0m\n");
+                        printf("[4] - Programação_Estruturada_em_C\x1b[0m\n");
+                        printf("\x1b[1;90m[0] - Sair\x1b[0m\n");
                         printf("\x1b[1;33mDigite sua escolha: \x1b[0m");
                         fgets(escolhaStr, sizeof(escolhaStr), stdin);
 
-                        if (sscanf(escolhaStr, "%d", &materiaEscolhida) != 1 || materiaEscolhida < 0 || materiaEscolhida > 3)
+                        if (sscanf(escolhaStr, "%d", &materiaEscolhida) != 1 || materiaEscolhida < 0 || materiaEscolhida > 4)
                         {
                             printf("\x1b[31mEntrada inválida! Digite novamente.\x1b[0m\n");
                             continue;
@@ -171,7 +180,8 @@ int main()
                     {
                         sscanf(linha, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, ra, materia, &n1, &n2, &n3, &media);
 
-                        if (strcmp(nomeAluno, nome) == 0)
+                        if (_stricmp(nomeAluno, nome) == 0)
+
                         {
                             exibaAluno(nome, turma, ra, materia, n1, n2, n3, media);
                             encontrou = 1;
@@ -220,7 +230,7 @@ int main()
 
                 do
                 {
-                    printf("\x1b[1;31mDeseja buscar outro aluno? [1] Sim [0] Nao: \x1b[0m");
+                    printf("\x1b[1;33mDeseja buscar outro aluno? [1] Sim [0] Nao: \x1b[0m");
                     fgets(escolhaStr, sizeof(escolhaStr), stdin);
 
                     if (sscanf(escolhaStr, "%d", &buscarNovamente) != 1 || (buscarNovamente != 0 && buscarNovamente != 1))
@@ -249,7 +259,7 @@ int main()
                 printf("\x1b[36m[1] - Algoritmos e Estruturas de Dados em Python\n");
                 printf("[2] - Analise e Projeto de Sistemas\n");
                 printf("[3] - Engenharia de Software Agil \n");
-                printf("[0] - Sair \x1b[0m\n");
+                printf("\x1b[1;90m[0] - Sair \x1b[0m\n");
 
                 int escolhaInt;
                 char entrada[10];
@@ -272,7 +282,7 @@ int main()
                 if (escolhaInt == 1)
                 {
                     arquivoEscolhido = pim01;                                       // Determina qual arquivo será aberto
-                    strcpy(nomeMateria, "Algrtmo e Estruturas de Dados em Python"); // função "strcopy" Copia a string do nome da matéria para a variável nomeMateria.ai podemos usar ela para exibir o nome do relatorio qnd ele for aberto
+                    strcpy(nomeMateria, "Algorit. e Estruturas de Dados em Python"); // função "strcopy" Copia a string do nome da matéria para a variável nomeMateria.ai podemos usar ela para exibir o nome do relatorio qnd ele for aberto
                 }
                 else if (escolhaInt == 2)
                 {
@@ -289,7 +299,7 @@ int main()
                     //printf("Saindo");
                     break;// break dento de das chaves para pq o relatorio nao é exibido qnd escolhemos, se deixar sem as chaves, o relatorio nao é exibido e o sistema sai desse modulo
                 }
-                printf("\x1b[1;37m===================================================\n");
+                printf("\n\x1b[1;37m===================================================\n");
                 printf("Relatorio de %s\n", nomeMateria);
                 printf("===================================================\x1b[0m\n");
                 char linha[200], nome[50], turma[20], ra[20], materia[50];
@@ -359,7 +369,7 @@ void exibirMenuPrincipal()
     printf("\n--- Selecione uma opção ---\x1b[0m\n");
     printf("\x1b[36m[1] - Buscar por aluno\n");
     printf("[2] - Buscar por matéria\n");
-    printf("[0] - Sair\x1b[0m\n");
+    printf("\x1b[1;90m[0] - Sair\x1b[0m\n");
 }
 
 void exibaAluno(char *nome, char *turma, char *ra, char *materia, float n1, float n2, float n3, float nota)
