@@ -247,7 +247,7 @@ int main()
                 fseek(pim02, 0, SEEK_SET); // reinicia o arquivo toda vez que a gente querer olhar o relatorio
                 fseek(pim03, 0, SEEK_SET); // reinicia o arquivo toda vez que a gente querer olhar o relatorio
                 fseek(pim04, 0, SEEK_SET); // reinicia o arquivo toda vez que a gente querer olhar o relatorio
-                
+
                 encontrou = 0;
                 int contadorAlunos = 0; // variavel para contar os alunos dos arquivos, ela será incremetanda a cada vez que o while repetir na hora de mostrar o relatorio
 
@@ -304,28 +304,37 @@ int main()
                 printf("\n\x1b[1;37m===================================================\n");
                 printf("Relatorio de %s\n", nomeMateria);
                 printf("===================================================\x1b[0m\n");
-                char linhaArqPim[200], nome[25], turma[20], ra[20], materia[25];
+                char linhaArqPim[200], nome[25], turma[20], ra[20], materia[30];
                 float n1, n2, n3, nota;
                 char pulaLinha[40];
-                
-                fgets(pulaLinha, sizeof(pulaLinha), arquivoEscolhido);// pula o cabeçalho
+
+                fgets(pulaLinha, sizeof(pulaLinha), arquivoEscolhido);                    // pula o cabeçalho
                 while (fgets(linhaArqPim, sizeof(linhaArqPim), arquivoEscolhido) != NULL) // como a gente usou o ponteiro "arquivoEscolhido" nao foi preciso usar um while e fgets para abrir cada aquivo. Ele vai salvar na variavel "linhaArqPim" o relatorio condizente a nossa escolha
                 {
                     linhaArqPim[strcspn(linhaArqPim, "\n")] = '\0';
-                    sscanf(linhaArqPim, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, ra, materia, &n1, &n2, &n3, &nota);
+                    // sscanf(linhaArqPim, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, ra, materia, &n1, &n2, &n3, &nota);
 
-                    exibaAluno(nome, turma, ra, materia, n1, n2, n3, nota);
+                    if (sscanf(linhaArqPim, "%39[^;];%39[^;];%39[^;];%39[^;];%f;%f;%f;%f",
+                               nome, turma, ra, materia, &n1, &n2, &n3, &nota) == 8)
+                    {
+                        encontrou = 1;
+                        exibaAluno(nome, turma, ra, materia, n1, n2, n3, nota);
+                        contadorAlunos++; // faz o incremento da variavel para saber o total de alunos exibidos por arquivo
+                    }
 
-                    contadorAlunos++; // faz o incremento da variavel para saber o total de alunos exibidos por arquivo
-                    encontrou = 1;
+
+                    //encontrou = 1;
                     // A variável "encontrou" funciona como uma flag, assim que eu encontro oq eu quero, ela muda para 1 e nao vai para a condição ali de baixo fora do while que esta lendoo arquivo.
                     // Ela começa com valor 0 e muda para 1 quando o aluno é encontrado, isso significa que deu certo na nossa procura. Caso nao achar nada, a variavel vai continuar 0 (pq eu a iniciei como zero no começo do codigo) e vai entrar na condição ali de baixo
                 }
-
-                printf("\x1b[1;33mTotal de alunos encontrados: %i\n\x1b[0m", contadorAlunos);
+                if (encontrou == 1)
+                {
+                    printf("\x1b[1;33mTotal de alunos encontrados: %i\n\x1b[0m", contadorAlunos);
+                }
+                
                 if (encontrou == 0)
                 { // caso eu nao encontrar nenhum aluno no arquivo, a variavel nao vai mudar (pq ela esta iniciada com 0) e vai entrar nessa condição, que será verdadeira
-                    printf("Nenhum aluno encontrado para esta materia.\n");
+                    printf("\x1b[1;31mNenhum aluno encontrado para esta materia.\x1b[0m\n");
                 }
                 do
                 {
