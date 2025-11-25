@@ -1,14 +1,13 @@
 #include <stdio.h>  //funções de entrada e saída
 #include <string.h> //manipulação de strings (strcmp, strcpy, etc.);
 #include <ctype.h>  //funções de caracteres (como toupper, tolower).
-#include <stdlib.h> // precisa pra usar atoi()
 #include <locale.h> //permite usar acentuação em português (setlocale);
 
-void exibirMenuPrincipal();                                                                                  // menu inicial
+void exibirMenuPrincipal();// menu inicial
 void exibaAluno(char *nome, char *turma, char *ra, char *materia, float n1, float n2, float n3, float nota); // função para printar o relatorio dos alunos
-int nomeValido(char *nome);                                                                                  // função para validar a entrada do nome do aluno e que nao deixar passar numeros
-int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, FILE *pim04, char *nomeAluno);                  // função que percorre os 3 arquivos para usar no busca por alunos geral
-void cores(int nota1);                                                                                       // função para as cores nos relatorios
+//int nomeValido(char *nome); // função para validar a entrada do nome do aluno e que nao deixar passar numeros
+int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, FILE *pim04, char *nomeAluno);// função que percorre os 3 arquivos para usar no busca por alunos geral
+void cores(int nota);// função para as cores nos relatorios
 int main()
 {
     system("chcp 65001 > nul");
@@ -42,66 +41,61 @@ int main()
         return 1;
     }
 
-    int dnv = 1; // dps anotar sobre essa variavel e sua funcionalidade
+    int dnv = 1; // variavel que serve para fazer o loop do menu principal, permitindo que o usuario volte ao menu apos cada operação, caso queira. ela começa em 1 (verdadeiro) isso faz co o o loop rode. quando o usuario escolhe a opção 0 no menu, essa variavel recebe 0 (falso) e o loop para de rodar, saindo do programa. ela é atribuida ao valor de 0 no case 0 do switch. se eu nao atribuise-la ao valor 0, o loop continuaria rodando mesmo quando o usuario escolhesse sair do programa pq a variavel continuaria com o valor 1 (verdadeiro) e satisfazendo a condição e entrando no loop infinitamente
     do
     {
         system("cls"); // limpa o terminal a cada vez que voltar para o menu novamente
         int opcao;
-        char entrada[10];
         exibirMenuPrincipal(); // função para mostrar o menu principal
         do
         {
             printf("\x1b[1;33mDigite sua escolha: \x1b[0m");
-            fgets(entrada, sizeof(entrada), stdin);
-
-            // sscanf retorna 1 se conseguiu ler um número inteiro corretamente
-            if (sscanf(entrada, "%d", &opcao) != 1 || opcao < 0 || opcao > 2)
+        
+            if (scanf("%d", &opcao) != 1 || opcao < 0 || opcao > 2) //essa função verifica o retorno do scanf, se for diferente de 1, significa que a entrada foi inválida (não é um número inteiro), o scanf retorna 1 quando a leitura é bem-sucedida e retorna 0 em caso de falha. Nesse caso, o scanf esta esperando um número inteiro (%d), se o usuario digitar algo que não pode ser convertido para um inteiro (como uma letra ou símbolo), o scanf falha e retorna 0. Assim, a condição verifica se o retorno do scanf é diferente de 1 (indicando uma falha na leitura) ou se o valor lido está fora do intervalo válido (menor que 0 ou maior que 2). Se qualquer uma dessas condições for verdadeira, o programa entra no bloco if para tratar a entrada inválida.
             {
+                while (getchar() != '\n'); // limpa o buffer do stdin para evitar loop infinito em caso de entrada inválida
                 printf("\x1b[31mEntrada inválida! Digite novamente.\x1b[0m\n");
-                continue; // volta para o início do loop
+                continue; // caso a entrada seja inválida, volta para o início do loop, se a gente nao usar esse continue, o codigo vai direto para o break e sair do loop mesmo com a entrada inválida
             }
+            break; // entrada válida, sai do loop, se a gente nao usar esse break, o loop vai continuar infinito mesmo com a entrada valida. ele serve para parar o loop quando a entrada for valida, impedindo um possivel loop infinito
 
-            break; // entrada válida, sai do loop
         } while (1);
 
-        char linhaArqPim[100]; // variavel onde esta sendo salvo os dados do arquivo
-        char escolhaStr[10];   // var para guardar a escolha do usuario
+        char linhaArqPim[200]; // variavel onde esta sendo salvo os dados do arquivo
         int encontrou = 0;     // flag para controlar o aviso dos alunos nao encontrados
-        int novamente;
+        int novamente;// variavel que fará o controle do loop para ver outro relatorio apos exibir um relatorio, se o usuario digitar 1, o loop recomeça, se digitar 0, o loop para e volta para o menu principal
         switch (opcao)
         {
         case 1:
         { // Busca por aluno
-            int buscarNovamente = 1;
+            int buscarNovamente = 1;// variavel para controlar se o usuario quer buscar outro aluno ou nao, caso a gente digitar 0 (a variavel recebe 0), o loop para de rodar e volta para o menu principal, caso a gente digite 1 (a variavel recebe 1), o loop continua rodando e a gente pode buscar outro aluno, a gente vai atribuir o valor dessa variavel com base na escolha do usuario no final do loop de busca por aluno, if (scanf("%d", &buscarNovamente) != 1 || (buscarNovamente != 0 && buscarNovamente != 1)), antes de entrar no case 2
+            while (getchar() != '\n'); // limpa o buffer do stdin antes de entrar no loop para nao ir com lixo e dar erro na leitura e acabar entrando no loop infinito ou printando "entrada invalida! digite novamente" da condição ali de baixo
             while (buscarNovamente)
             {
-                char nomeAluno[50];
-                int tipoBusca = 0;
+                char raAluno[700];
+                int tipoBusca = 0;//variavel para saber se o usuario quer buscar por materia especifica (1) ou geral (2), essa variavel sera atribuida com base na escolha do usuario logo abaixo, no do while que pergunta "Deseja buscar por todas as matérias ou somente uma?", se o usuario digitar 1, a variavel recebe 1, se digitar 2, a variavel recebe 2, se digitar 0, a gente sai do loop de busca por aluno e volta para o menu principal
 
-                // Escolha do tipo de busca
-                do
+                do// Escolha do tipo de busca
                 {
-                    printf("\x1b[1;37m\nDeseja buscar por todas as matérias ou somente uma?\x1b[0m\n");
+                    printf("\x1b[1;37mDeseja buscar por todas as matérias ou somente uma?\x1b[0m\n");
                     printf("\x1b[36m[1] - Materia especifica\n");
                     printf("[2] - Geral\n");
                     printf("\x1b[1;90m[0] - Sair\x1b[0m\n");
                     printf("\x1b[1;33mDigite sua escolha: \x1b[0m");
-                    fgets(escolhaStr, sizeof(escolhaStr), stdin);
-
-                    // sscanf retorna 1 se conseguiu ler um número inteiro corretamente
-                    if (sscanf(escolhaStr, "%d", &tipoBusca) != 1 || tipoBusca < 0 || tipoBusca > 2)
+                
+                    if (scanf("%d", &tipoBusca) != 1 || tipoBusca < 0 || tipoBusca > 2)
                     {
+                        while (getchar() != '\n'); // limpa o buffer do stdin
                         printf("\x1b[31mEntrada inválida! Digite novamente.\x1b[0m\n");
                         continue; // volta para o início do loop
                     }
-
                     break;
                 } while (1);
 
                 if (tipoBusca == 1)
                 {
                     int materiaEscolhida = 0;
-
+                    while (getchar() != '\n');
                     do
                     { // Escolha da matéria
                         printf("\x1b[1;37m\nEscolha a materia:\x1b[0m\n");
@@ -111,11 +105,12 @@ int main()
                         printf("[4] - Programação Estruturada em C\x1b[0m\n");
                         printf("\x1b[1;90m[0] - Sair\x1b[0m\n");
                         printf("\x1b[1;33mDigite sua escolha: \x1b[0m");
-                        fgets(escolhaStr, sizeof(escolhaStr), stdin);
-
-                        if (sscanf(escolhaStr, "%d", &materiaEscolhida) != 1 || materiaEscolhida < 0 || materiaEscolhida > 4)
+                    
+                        if (scanf("%d", &materiaEscolhida) != 1 || materiaEscolhida < 0 || materiaEscolhida > 4)
                         {
-                            printf("\x1b[31mEntrada inválida! Digite novamente.\x1b[0m\n"); // validação da entrada do usuario
+                            printf("\x1b[31mEntrada inválida! Digite novamente.\x1b[0m\n");
+                            while (getchar() != '\n')
+                                ;
                             continue;
                         }
 
@@ -124,7 +119,7 @@ int main()
 
                     FILE *arquivo; // ponteiro que será usado para determinar qual arquivo vai ser aberto
 
-                    if (materiaEscolhida == 1)
+                    if (materiaEscolhida == 1)//a gente atribui o arquivo correto para o ponteiro "arquivo" com base na escolha do usuario ali de cima
                         arquivo = pim01;
                     else if (materiaEscolhida == 2)
                         arquivo = pim02;
@@ -133,7 +128,7 @@ int main()
                     else if (materiaEscolhida == 4)
                         arquivo = pim04;
 
-                    if (materiaEscolhida == 0)
+                    if (materiaEscolhida == 0)//se o usuario escolher 0, a gente sai do loop de busca por aluno e volta para o menu principal
                     {
                         printf("saindo");
                         break;
@@ -141,7 +136,7 @@ int main()
 
                     char nomeMateria[50]; // variavel onde será atribuido os nomes das materias
                     if (materiaEscolhida == 1)
-                        strcpy(nomeMateria, "Algoritmos e Estruturas de Dados em Python"); // coloca o nome da materia dentra da var "nomeMateria"
+                        strcpy(nomeMateria, "Algorit. e Estruturas de Dados em Python"); // coloca o nome da materia dentra da var "nomeMateria"
                     else if (materiaEscolhida == 2)
                         strcpy(nomeMateria, "Analise e Projeto de Sistemas");
                     else if (materiaEscolhida == 3)
@@ -149,25 +144,23 @@ int main()
                     else
                         strcpy(nomeMateria, "Programação Estruturada em C");
 
+                    char raTeclado[700];
                     do
                     {
-                        printf("\x1b[1;37m\nDigite o nome do aluno: \x1b[0m");
-                        fgets(nomeAluno, sizeof(nomeAluno), stdin);
-                        nomeAluno[strcspn(nomeAluno, "\n")] = 0;
-
-                        if (!nomeValido(nomeAluno)) // validação sobre entrada de numeros
+                        printf("digite o RA do aluno: ");
+                        scanf("%s", raTeclado); //
+                        while (getchar() != '\n'); // limpa o buffer do stdin
+                        for (int i = 0; raTeclado[i] != '\0'; i++)
                         {
-                            printf("\x1b[31mNome inválido! Use apenas letras .\x1b[0m\n");
-                            continue; // volta para o início do loop se o nome for inválido
+                            raTeclado[i] = tolower(raTeclado[i]); // faz a conversão para minusculo da entraadda do RA
                         }
-
                         break; // sai do loop se o nome for válido
                     } while (1);
 
                     rewind(arquivo); // reiniciaa o arquivo para a proxima leitura
 
                     int encontrou = 0; // flag para indicar que o aluno foi encontrado ou nao
-                    char nome[25], turma[20], ra[20], materia[25];
+                    char nome[700], turma[700], ra[700], materia[700];
                     float n1, n2, n3, media;
 
                     fgets(linhaArqPim, sizeof(linhaArqPim), arquivo); // pula o cabeçalho
@@ -175,30 +168,35 @@ int main()
                     {
                         sscanf(linhaArqPim, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, ra, turma, materia, &n1, &n2, &n3, &media); // essa parte guarda cada parte do csv separado por ";" e guarda dentro dessas var
 
-                        if (strcmp(nomeAluno, nome) == 0)
+                        for (int i = 0; ra[i] != '\0'; i++)
+                        {
+                            ra[i] = tolower(ra[i]);// faz a conversão para minusculo da variavel ra que foi lida do arquivo, para fazer a comparação correta com o RA digitado pelo usuario, que também foi convertido para minusculo ali de cima. essa função pega cada parte da string ra e converte para minusculo enquanto nao chegar no caractere nulo '\0', que indica o fim da string
+                        }
+
+                        if (strcmp(raTeclado, ra) == 0)// faz a comparação entre o RA digitado pelo usuario (raTeclado) e o RA lido do arquivo (ra), se forem iguais, entra no if e exbe os dados do aluno
                         {
                             exibaAluno(nome, turma, ra, materia, n1, n2, n3, media);
-                            encontrou = 1;
+                            encontrou = 1;// muda a flag para indicar que o aluno foi encontrado
                         }
                     }
 
-                    if (!encontrou)
+                    if (!encontrou)// se o aluuno nao for encontrado, exibe a mensagem abaixo
                         printf("\x1b[1;31maluno nao encontrado para a materia %s.\x1b[0m\n", nomeMateria);
                 }
 
-                int encontrouTipoBusca = 0;
+                int encontrouTipoBusca = 0; // variavel onde sera guardado o retorno da função buscarNosArquivos e faz a verificação se o aluno foi encontrado ou nao
                 if (tipoBusca == 2)
                 {
                     do
                     {
-                        printf("\x1b[1;37m\nDigite o nome do aluno: \x1b[0m");
-                        fgets(nomeAluno, sizeof(nomeAluno), stdin);
-                        nomeAluno[strcspn(nomeAluno, "\n")] = 0;
+                        printf("\x1b[1;37m\nDigite o RA do aluno: \x1b[0m");
+                        scanf("%s", raAluno);
+                        while (getchar() != '\n')
+                            ; // limpa o buffer do stdin
 
-                        if (!nomeValido(nomeAluno))
+                        for (int i = 0; i < raAluno[i]; i++)
                         {
-                            printf("\x1b[31mNome inválido! Use apenas letras e espaços.\x1b[0m\n");
-                            continue; // volta para o início do loop se o nome for inválido
+                            raAluno[i] = tolower(raAluno[i]);
                         }
 
                         break; // sai do loop se o nome for válido
@@ -210,14 +208,14 @@ int main()
                     fgets(linhaArqPim, sizeof(linhaArqPim), pim04); // pula o cabeçalho
 
                     // função que abre todos os arquivos e faz a exibição do aluno que a gente quer olhar
-                    encontrouTipoBusca = buscarNosArquivos(pim01, pim02, pim03, pim04, nomeAluno); // o dado de return na função "buscarNosArquivos" é guardado dentro da variavel "encontrouTipoBusca", ent, se encontrou um aluno ela mudará a variavel para , se nao encontrou um aluno, a variavel ficara com o valor de 0 e vai aparecer a mensagem "Aluno nao encontrado nos relatorios!!"
+                    encontrouTipoBusca = buscarNosArquivos(pim01, pim02, pim03, pim04, raAluno); // o dado de return na função "buscarNosArquivos" é guardado dentro da variavel "encontrouTipoBusca", ent, se encontrou um aluno ela mudará a variavel para , se nao encontrou um aluno, a variavel ficara com o valor de 0 e vai aparecer a mensagem "Aluno nao encontrado nos relatorios!!"
                 }
-                if (tipoBusca == 2 && !encontrouTipoBusca)
+                if (tipoBusca == 2 && !encontrouTipoBusca)//duas variaveis dentro desse if pq a gente so quer que essa mensagem apareça se o usuario escolheu a busca geral (tipoBusca == 2) e se o aluno nao foi encontrado em nenhum dos arquivos (!encontrouTipoBusca), caso so coloque a variavel encontrouTipoBusca, a mensagem apareceria mesmo quando o usuario escolhesse a busca por materia especifica (tipoBusca == 1), e nao encontrasse o aluno la na primeiro modulo de tipo de busca por materia especifica
                 {
                     printf("\x1b[1;33mAluno nao encontrado nos relatorios!!\x1b[0m\n");
                 }
 
-                if (tipoBusca == 0)
+                if (tipoBusca == 0)// se o usuario escolher 0, a gente sai do loop de busca por aluno e volta para o menu principal
                 {
                     break;
                 }
@@ -225,14 +223,13 @@ int main()
                 do
                 {
                     printf("\x1b[1;33mDeseja buscar outro aluno? [1] Sim [0] Nao: \x1b[0m");
-                    fgets(escolhaStr, sizeof(escolhaStr), stdin);
-
-                    if (sscanf(escolhaStr, "%d", &buscarNovamente) != 1 || (buscarNovamente != 0 && buscarNovamente != 1))
+                    if (scanf("%d", &buscarNovamente) != 1 || (buscarNovamente != 0 && buscarNovamente != 1))
                     {
                         printf("\x1b[1;31mEntrada inválida! Digite novamente.\x1b[0m\n");
+                        while (getchar() != '\n')
+                            ;
                         continue;
                     }
-
                     break;
                 } while (1);
             }
@@ -241,6 +238,7 @@ int main()
 
         break;
         case 2:
+            while (getchar() != '\n'); // limpa o buffer do stdin antes de entrar no loop para nao ir com lixo e dar erro na leitura e acabar entrando no loop infinito ou printando "entrada invalida! digite novamente" da condição ali de baixo, esse while é necessario pq antes de entrar no case 2, a gente usou o scanf para ler a opção do menu, entao fica esse lixo no buffer do stdin
             do
             {
                 fseek(pim01, 0, SEEK_SET); // reinicia o arquivo toda vez que a gente querer olhar o relatorio
@@ -248,7 +246,7 @@ int main()
                 fseek(pim03, 0, SEEK_SET); // reinicia o arquivo toda vez que a gente querer olhar o relatorio
                 fseek(pim04, 0, SEEK_SET); // reinicia o arquivo toda vez que a gente querer olhar o relatorio
 
-                encontrou = 0;
+                encontrou = 0;// flag para controlar o aviso dos alunos nao encontrados, ela é resetada para 0 toda vez que o loop recomeça para garantir a exibição correta da mensagem de aluno nao encontrado
                 int contadorAlunos = 0; // variavel para contar os alunos dos arquivos, ela será incremetanda a cada vez que o while repetir na hora de mostrar o relatorio
 
                 printf("\n\x1b[1;33mEscolha uma materia:\x1b[0m\n");
@@ -258,16 +256,15 @@ int main()
                 printf("[4] - Programação Estruturada em C \n");
                 printf("\x1b[1;90m[0] - Sair \x1b[0m\n");
 
-                int escolhaInt;
-                char entrada[10];
+                int escolhaMateria;
                 do
                 {
                     printf("\x1b[1;33mDigite a materia da sua escolha: \x1b[0m");
-                    fgets(entrada, sizeof(entrada), stdin);
-                    novamente = atoi(entrada);
-                    if (sscanf(entrada, "%d", &escolhaInt) != 1 || escolhaInt < 0 || escolhaInt > 4)
+                    if (scanf("%d", &escolhaMateria) != 1 || escolhaMateria < 0 || escolhaMateria > 4)
                     {
-                        printf("\x1b[1;31mEntrada inválida! Digite apenas 0 ou 1.\x1b[0m\n");
+                        printf("\x1b[1;31mEntrada inválida!\x1b[0m\n");
+                        while (getchar() != '\n')
+                            ;
                         continue;
                     }
                     break;
@@ -275,24 +272,24 @@ int main()
 
                 // Determina qual arquivo e nome da materia
                 FILE *arquivoEscolhido; // esse ponteiro aponta para os primeiros arquivos que abrimos no inicio do codigo
-                char nomeMateria[25];
+                char nomeMateria[70];
 
-                if (escolhaInt == 1)
+                if (escolhaMateria == 1)
                 {
-                    arquivoEscolhido = pim01;                                        // Determina qual arquivo será aberto
+                    arquivoEscolhido = pim01;// Determina qual arquivo será aberto
                     strcpy(nomeMateria, "Algorit. e Estruturas de Dados em Python"); // função "strcopy" Copia a string do nome da matéria para a variável nomeMateria.ai podemos usar ela para exibir o nome do relatorio qnd ele for aberto
                 }
-                else if (escolhaInt == 2)
+                else if (escolhaMateria == 2)
                 {
                     arquivoEscolhido = pim02;                             // Determina qual arquivo será aberto
                     strcpy(nomeMateria, "Analise e Projeto de Sistemas"); // função "strcopy" Copia a string do nome da matéria para a variável nomeMateria. ai podemos usar ela para exibir o nome do relatorio qnd ele for aberto
                 }
-                else if (escolhaInt == 3)
+                else if (escolhaMateria == 3)
                 {
                     arquivoEscolhido = pim03;                           // Determina qual arquivo será aberto
                     strcpy(nomeMateria, "Engenharia de Software Agil"); // função "strcopy" Copia a string do nome da matéria para a variável nomeMateria. ai podemos usar ela para exibir o nome do relatorio qnd ele for aberto
                 }
-                else if (escolhaInt == 4)
+                else if (escolhaMateria == 4)
                 {
                     arquivoEscolhido = pim04;                            // Determina qual arquivo será aberto
                     strcpy(nomeMateria, "Programação Estruturada em C"); // função "strcopy" Copia a string do nome da matéria para a variável nomeMateria. ai podemos usar ela para exibir o nome do relatorio qnd ele for aberto
@@ -302,54 +299,61 @@ int main()
                     break; // break dentro  das chaves para pq o relatorio nao é exibido qnd escolhemos, se deixar sem as chaves, o relatorio nao é exibido e o sistema sai desse modulo
                 }
                 printf("\n\x1b[1;37m===================================================\n");
-                printf("Relatorio de %s\n", nomeMateria);
+                printf("Relatorio de %s\n", nomeMateria);// nome da materia é exibida aqui que foi atribuida ali de cima com a função "strcopy"
                 printf("===================================================\x1b[0m\n");
-                char linhaArqPim[200], nome[25], turma[20], ra[20], materia[30];
+                char linhaArqPim[200], nome[25], turma[70], ra[20], materia[400];
                 float n1, n2, n3, nota;
-                char pulaLinha[40];
+                char pulaLinha[40];//função para pular o cabeçalho do arquivo apenas do arquivo escolhido
 
                 fgets(pulaLinha, sizeof(pulaLinha), arquivoEscolhido);                    // pula o cabeçalho
                 while (fgets(linhaArqPim, sizeof(linhaArqPim), arquivoEscolhido) != NULL) // como a gente usou o ponteiro "arquivoEscolhido" nao foi preciso usar um while e fgets para abrir cada aquivo. Ele vai salvar na variavel "linhaArqPim" o relatorio condizente a nossa escolha
                 {
-                    linhaArqPim[strcspn(linhaArqPim, "\n")] = '\0';
+                    linhaArqPim[strcspn(linhaArqPim, "\n")] = '\0';// remove o caractere de nova linha do final da string lida do arquivo, se houver
                     // sscanf(linhaArqPim, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, turma, ra, materia, &n1, &n2, &n3, &nota);
 
-                    if (sscanf(linhaArqPim, "%39[^;];%39[^;];%39[^;];%39[^;];%f;%f;%f;%f",
-                               nome, turma, ra, materia, &n1, &n2, &n3, &nota) == 8)
+                    if (sscanf(linhaArqPim, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f",
+                               nome, ra, turma, materia, &n1, &n2, &n3, &nota) == 8)
                     {
                         encontrou = 1;
                         exibaAluno(nome, turma, ra, materia, n1, n2, n3, nota);
                         contadorAlunos++; // faz o incremento da variavel para saber o total de alunos exibidos por arquivo
                     }
 
-
-                    //encontrou = 1;
-                    // A variável "encontrou" funciona como uma flag, assim que eu encontro oq eu quero, ela muda para 1 e nao vai para a condição ali de baixo fora do while que esta lendoo arquivo.
-                    // Ela começa com valor 0 e muda para 1 quando o aluno é encontrado, isso significa que deu certo na nossa procura. Caso nao achar nada, a variavel vai continuar 0 (pq eu a iniciei como zero no começo do codigo) e vai entrar na condição ali de baixo
+                    // encontrou = 1;
+                    //  A variável "encontrou" funciona como uma flag, assim que eu encontro oq eu quero, ela muda para 1 e nao vai para a condição ali de baixo fora do while que esta lendoo arquivo.
+                    //  Ela começa com valor 0 e muda para 1 quando o aluno é encontrado, isso significa que deu certo na nossa procura. Caso nao achar nada, a variavel vai continuar 0 (pq eu a iniciei como zero no começo do codigo) e vai entrar na condição ali de baixo
                 }
                 if (encontrou == 1)
                 {
                     printf("\x1b[1;33mTotal de alunos encontrados: %i\n\x1b[0m", contadorAlunos);
                 }
-                
+
                 if (encontrou == 0)
                 { // caso eu nao encontrar nenhum aluno no arquivo, a variavel nao vai mudar (pq ela esta iniciada com 0) e vai entrar nessa condição, que será verdadeira
                     printf("\x1b[1;31mNenhum aluno encontrado para esta materia.\x1b[0m\n");
                 }
                 do
                 {
+                    while (getchar() != '\n'); // limpa o buffer do stdin
                     printf("\x1b[1;37mDeseja buscar outra materia? [1] Sim [0] Nao: \x1b[0m");
-                    fgets(entrada, sizeof(entrada), stdin);
+                    /*fgets(entrada, sizeof(entrada), stdin);
                     novamente = atoi(entrada);
                     if (sscanf(entrada, "%d", &opcao) != 1 || opcao < 0 || opcao > 2)
                     {
                         printf("\x1b[1;31mEntrada inválida! Digite apenas 0 ou 1.\x1b[0m\n");
                         continue;
+                    }*/
+                    if (scanf("%d", &novamente) != 1 || (novamente != 0 && novamente != 1))
+                    {
+                        printf("\x1b[1;31mEntrada inválida! Digite apenas 0 ou 1.\x1b[0m\n");
+                        while (getchar() != '\n')
+                            ;
+                        continue;
                     }
                     break;
                 } while (1);
 
-            } while (novamente == 1);
+            } while (novamente == 1);// se a gente escolher 1, o loop recomeça e a gente pode olhar outro relatorio, se escolher 0, o loop para e volta para o menu principal
             break;
 
         case 0:
@@ -369,7 +373,7 @@ int main()
     system("pause");
 }
 
-void exibirMenuPrincipal()
+void exibirMenuPrincipal()// função para exibir o menu principal
 {
     printf("\n\x1b[1;37m===========================================\n");
     printf("         RELATÓRIO DE NOTAS - UNIP\n");
@@ -380,20 +384,21 @@ void exibirMenuPrincipal()
     printf("\x1b[1;90m[0] - Sair\x1b[0m\n");
 }
 
-void exibaAluno(char *nome, char *turma, char *ra, char *materia, float n1, float n2, float n3, float nota)
+void exibaAluno(char *nome, char *turma, char *ra, char *materia, float n1, float n2, float n3, float nota)// função para exibir o relatorio do aluno, os parametros sao as variaveis que serao exibidas no relatorio e que serao passadas quando a função for chamada
 {
     cores(nota);
     printf("--------------------------------------\n");
     printf("Nome: %s\n", nome);
-    printf("Turma: %s\n", ra);
-    printf("RA: %s\n", turma);
+    printf("Turma: %s\n", turma);
+    printf("RA: %s\n", ra);
     printf("Matéria: %s\n", materia);
     printf("Notas: %.2f | %.2f | %.2f\n", n1, n2, n3);
     printf("Média Final: %.2f\n", nota);
     printf("--------------------------------------\x1b[0m\n");
 }
 
-int nomeValido(char *nome) // função para saber se o usuario digitou algum numero, percorre cada caracter da variavel nome e faz a verificação, se for numero, retorna 0
+//nao vou usar essa função por enquanto, mas deixei ela aqui caso precise futuramente
+/*int nomeValido(char *nome) // função para saber se o usuario digitou algum numero, percorre cada caracter da variavel nome e faz a verificação, se for numero, retorna 0
 {
     for (int i = 0; nome[i] != '\0'; i++)
     {
@@ -403,10 +408,11 @@ int nomeValido(char *nome) // função para saber se o usuario digitou algum num
         }
     }
     return 1; // nome válido
-}
-int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, FILE *pim04, char *nomeAluno) // função para ler os arquivos
+}*/
+int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, FILE *pim04, char *raAluno) // função para ler os arquivos usando o RA do aluno como parametro para buscar o aluno em todos os arquivos e usada no case 1 do switch no modulo de busca por aluno geral.
+//percorre os 4 arquivos e faz a exibição do aluno caso ele seja encontrado em algum dos arquivos, retornando 1 se o aluno for encontrado e 0 se nao for encontrado em nenhum dos arquivos
 {
-    char linhaArqPim[200], nome[25], turma[20], ra[20], materia[25];
+    char linhaArqPim[200], nome[700], turma[700], ra[700], materia[700];
     float n1, n2, n3, media;
     int encontrou = 0;
 
@@ -414,8 +420,14 @@ int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, FILE *pim04, char *
     while (fgets(linhaArqPim, sizeof(linhaArqPim), pim01))
     {
         sscanf(linhaArqPim, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, ra, turma, materia, &n1, &n2, &n3, &media);
-        if (strcmp(nomeAluno, ra) == 0)
+        for (int i = 0; ra[i] != '\0'; i++)
+            {
+                ra[i] = tolower(ra[i]);
+            }
+        if (strcmp(raAluno, ra) == 0)
         {
+            
+            
             exibaAluno(nome, turma, ra, materia, n1, n2, n3, media);
             encontrou = 1;
         }
@@ -425,7 +437,11 @@ int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, FILE *pim04, char *
     while (fgets(linhaArqPim, sizeof(linhaArqPim), pim02))
     {
         sscanf(linhaArqPim, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, ra, turma, materia, &n1, &n2, &n3, &media);
-        if (strcmp(nomeAluno, ra) == 0)
+        for (int i = 0; ra[i] != '\0'; i++)
+            {
+                ra[i] = tolower(ra[i]);
+            }
+        if (strcmp(raAluno, ra) == 0)
         {
             exibaAluno(nome, turma, ra, materia, n1, n2, n3, media);
             encontrou = 1;
@@ -436,7 +452,11 @@ int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, FILE *pim04, char *
     while (fgets(linhaArqPim, sizeof(linhaArqPim), pim03))
     {
         sscanf(linhaArqPim, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, ra, turma, materia, &n1, &n2, &n3, &media);
-        if (strcmp(nomeAluno, ra) == 0)
+        for (int i = 0; ra[i] != '\0'; i++)
+            {
+                ra[i] = tolower(ra[i]);
+            }
+        if (strcmp(raAluno, ra) == 0)
         {
             exibaAluno(nome, turma, ra, materia, n1, n2, n3, media);
             encontrou = 1;
@@ -447,7 +467,11 @@ int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, FILE *pim04, char *
     while (fgets(linhaArqPim, sizeof(linhaArqPim), pim04))
     {
         sscanf(linhaArqPim, "%[^;];%[^;];%[^;];%[^;];%f;%f;%f;%f", nome, ra, turma, materia, &n1, &n2, &n3, &media);
-        if (strcmp(nomeAluno, ra) == 0)
+        for (int i = 0; ra[i] != '\0'; i++)
+            {
+                ra[i] = tolower(ra[i]);
+            }
+        if (strcmp(raAluno, ra) == 0)
         {
             exibaAluno(nome, turma, ra, materia, n1, n2, n3, media);
             encontrou = 1;
@@ -457,16 +481,16 @@ int buscarNosArquivos(FILE *pim01, FILE *pim02, FILE *pim03, FILE *pim04, char *
     return encontrou;
 }
 
-void cores(int nota1) // função para colocar as cores qnd os relatorios for exibidos
+void cores(int nota) // função para colocar as cores qnd os relatorios for exibidos
 {
-    if (nota1 == 6)
+    if (nota == 6)//caso a nota seja igual a 6, a cor amarela sera exibida
     {
         printf("\x1b[1;33m");
     }
-    else if (nota1 > 6)
+    else if (nota > 6)//caso a nota seja maior que 6, a cor verde sera exibida
     {
         printf("\x1b[32m");
     }
-    else
+    else//caso a nota seja menor que 6, a cor vermelha sera exibida
         printf("\x1b[91m");
 }

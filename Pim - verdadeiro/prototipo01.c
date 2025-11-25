@@ -61,7 +61,7 @@ int main() {
     return 0;
 }
  */
-
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -151,4 +151,34 @@ int main()
                     flag = 1;
                 }
             } */
-    }}
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+
+    int escolha;
+while (1) {
+        printf("Digite um numero: ");
+
+        if (scanf("%d", &escolha) != 1) {// se a entrada nao for um numero inteiro a condição sera verdadeira sendo assim entrara no if, se for um numero o retorno sera 1 e a condição sera falsa 
+            printf("Entrada invalida! Digite apenas numeros.\n");
+
+            // limpar buffer
+            int c;
+            while ((escolha = getchar()) != '\n' && escolha != EOF);
+
+            continue; // volta ao inicio do loop
+        }
+
+        if (escolha == 1) {
+            printf("Voce digitou 1\n");
+        } else {
+            printf("Voce nao digitou 1\n");
+            break;
+        }
+    }
+
+    return 0;
+}
